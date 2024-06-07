@@ -16,7 +16,7 @@ private:
     RGBA32bit   m_color;
 public:
     /// if 32bpp, the alpha channel will be filled.
-    FCEffectFillColor(RGBQUAD color) : m_color{ color } {}
+    FCEffectFillColor(FCColor color) : m_color{ color } {}
 private:
     virtual void ProcessPixel(FCImage& img, int x, int y, RGBA32bit* px)
     {

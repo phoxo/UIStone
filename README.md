@@ -67,14 +67,31 @@ Although Microsoft no longer updates GDI+, and WIC is indeed powerful enough, bu
 
 > **Draw on the bitmap**
 ```c++
+// add this line -> using namespace Gdiplus;
 FCImage   img;
-FCCodecWIC::LoadFile(L"d:\\a.jpg", img);
+img.Create(500, 300, 32);
+img.ApplyEffect(FCEffectFillColor(Color::PapayaWhip));
 
-// draw a rec on the bitmap using GDI+
+// Here a GDI+ bitmap object is created. It doesn't allocate memory but directly uses the memory we provide
 auto   gpbmp = FCCodecGdiplus::CreateBitmapReference(img);
-Gdiplus::Graphics   gc(gpbmp.get());
-Gdiplus::SolidBrush   br(Gdiplus::Color::DarkRed);
-gc.FillEllipse(&br, Gdiplus::Rect(100, 100, 500, 500));
+Graphics   gc(gpbmp.get());
+gc.SetSmoothingMode(SmoothingModeAntiAlias);
+
+// draw a rect on the bitmap using GDI+
+Gdiplus::Font   font(L"Arial", (REAL)32);
+SolidBrush   br(Color::DarkGreen);
+gc.FillEllipse(&br, Rect(300, 100, 100, 100));
+gc.DrawString(L"Welcome to PhoXo!", -1, &font, PointF(30, 20), &br);
+
+// draw a line with arrow
+GraphicsPath   gp;
+PointF   pts[] = { {-2.5, -2.5}, {0, -0.5}, {2.5, -2.5}, {0, 2.5} };
+gp.AddPolygon(pts, 4);
+CustomLineCap   user_cap(&gp, NULL);
+Pen   pen(Color::DarkGreen, 10);
+pen.SetStartCap(LineCapRound);
+pen.SetCustomEndCap(&user_cap);
+gc.DrawLine(&pen, 50, 100, 200, 230);
 
 FCCodecGdiplus::Save(L"d:\\out.png", img);
 ```
