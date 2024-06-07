@@ -72,7 +72,8 @@ FCImage   img;
 img.Create(500, 300, 32);
 img.ApplyEffect(FCEffectFillColor(Color::PapayaWhip));
 
-// Here a GDI+ bitmap object is created. It doesn't allocate memory but directly uses the memory we provide
+// Here a GDI+ bitmap object is created.
+// and it doesn't allocate memory but directly uses the memory we provide
 auto   gpbmp = FCCodecGdiplus::CreateBitmapReference(img);
 Graphics   gc(gpbmp.get());
 gc.SetSmoothingMode(SmoothingModeAntiAlias);
