@@ -103,6 +103,7 @@ This is the program's output:
 As you can see, high-quality rendering in GDI+ can be applied directly to the bitmap. Many operations in PhoXo are done this way.
 
 > **Draw Image**
+
 Using GDI and GDI+, you can easily render our bitmaps to the screen. Please note that if you use the GDI method, 32-bit color bitmaps require pre-multiple alpha in advance.
 ```c++
 // draw image using GDI
