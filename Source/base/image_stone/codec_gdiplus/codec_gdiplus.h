@@ -30,15 +30,15 @@ public:
         return img.IsValid();
     }
 
-    static bool Save(PCWSTR image_path, const FCImage& img, int jpeg_quality = 0, int dpi = 0)
+    static bool SaveFile(PCWSTR filepath, const FCImage& img, int jpeg_quality = 0, int dpi = 0)
     {
         CImagePropertyGdiplus   prop;
         prop.m_save_jpeg_quality = jpeg_quality;
         prop.m_dpi = dpi;
-        return Save(image_path, img, prop);
+        return SaveFile(filepath, img, prop);
     }
 
-    static bool Save(PCWSTR image_path, const FCImage& img, const CImagePropertyGdiplus& prop)
+    static bool SaveFile(PCWSTR filepath, const FCImage& img, const CImagePropertyGdiplus& prop)
     {
         auto   src = FCCodecGdiplus::CreateBitmapReference(img);
         if (!src.get())
@@ -46,8 +46,8 @@ public:
 
         prop.AddAllProperty(*src);
 
-        imagestone_inner::CGdiplusSaveParam   param(image_path, prop.m_save_jpeg_quality);
-        return (src->Save(image_path, &param.m_type_CLSID, param.m_encoder_param.get()) == Gdiplus::Ok);
+        imagestone_inner::CGdiplusSaveParam   param(filepath, prop.m_save_jpeg_quality);
+        return (src->Save(filepath, &param.m_type_CLSID, param.m_encoder_param.get()) == Gdiplus::Ok);
     }
 
     static std::unique_ptr<Gdiplus::Bitmap> CreateBitmapReference(const FCImage& img)

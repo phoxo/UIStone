@@ -1,3 +1,4 @@
+
 ImageStone
 ===========
 ImageStone is a lightweight, header-only C++ image manipulation library. Initially, it was cross-platform, however, due to lack of time for maintenance and to maximize performance on Windows (such as thread pool, Bitmap handle, and convenient interaction with DC and D2D), I gave up support for cross-platform. Now, it is a Windows-only image library. However, the essence of image processing is merely a technique for manipulating two-dimensional arrays, The majority of the code is generic C++ code. I hope you can find useful information here.
@@ -28,7 +29,7 @@ int CPhoXoSeeApp::ExitInstance()
 }
 ```
 
-## Usage 
+## Load / Save image file 
 > **Load image from File**
 ```c++
 FCImage   img;
@@ -54,7 +55,7 @@ FCCodecWIC::LoadStream(stream, img, WICNormal32bpp);
 > **Save image to File**
 ```c++
 // read image to file using Gdiplus
-FCCodecGdiplus::Save(L"d:\\a.jpg", img, 80);
+FCCodecGdiplus::SaveFile(L"d:\\a.jpg", img, 80);
 
 // read image to file using WIC
 auto   bmp = CWICFunc::CreateBitmapFromHBITMAP(img, WICBitmapUseAlpha);
@@ -65,7 +66,7 @@ You might wonder why the WIC version requires 3-lines of code and an additional 
 
 Although Microsoft no longer updates GDI+, and WIC is indeed powerful enough, but GDI+ has a important feature that WIC lacks: creating a bitmap object from a provided memory address. Here's an example:
 
-> **Draw on the bitmap**
+## Draw on the bitmap
 ```c++
 // add this line -> using namespace Gdiplus;
 FCImage   img;
@@ -94,7 +95,7 @@ pen.SetStartCap(LineCapRound);
 pen.SetCustomEndCap(&user_cap);
 gc.DrawLine(&pen, 50, 100, 200, 230);
 
-FCCodecGdiplus::Save(L"d:\\out.png", img);
+FCCodecGdiplus::SaveFile(L"d:\\out.png", img);
 ```
 This is the program's output:
 
@@ -118,3 +119,21 @@ auto   gdip_img = FCCodecGdiplus::CreateBitmapReference(img);
 gc.SetInterpolationMode(InterpolationModeHighQualityBicubic);
 gc.DrawImage(gdip_img.get(), 0, 0, 200, 200);
 ```
+
+## Image processing
+
+One of the most important feature of ImageStone is the ability to handle images with ease. In addition to a wide range of built-in effects, you can also easily add new effects.
+```c++
+// This is a piece of code for applying Gaussian blur to an image
+FCImage   img;
+FCCodecWIC::LoadFile(L"d:\\1.jpg", img);
+
+FCEffectGaussianBlur   cmd(20, true);
+cmd.EnableParallelAccelerate(true);
+img.ApplyEffect(cmd);
+
+FCCodecGdiplus::SaveFile(L"d:\\out.jpg", img);
+```
+Please note the **EnableParallelAccelerate** switch. Enabling it allows the use of multithreading to maximize the utilization of modern multi-core CPUs. The processing time for a 5365x4194 image with the above code decreases from 950 milliseconds to 170 milliseconds, Most image processing algorithms experience a 5-10 times speed improvement.
+
+
