@@ -101,3 +101,19 @@ This is the program's output:
 ![out](https://github.com/phoxo/UIStone/assets/168192359/40b19e8f-08e9-4477-9823-b4b5512b2b10)
 
 As you can see, high-quality rendering in GDI+ can be applied directly to the bitmap. Many operations in PhoXo are done this way.
+
+> **Draw Image**
+Using GDI and GDI+, you can easily render our bitmaps to the screen. Please note that if you use the GDI method, 32-bit color bitmaps require pre-multiple alpha in advance.
+```c++
+// draw image using GDI
+if ((img.ColorBits() == 32) && !img.IsPremultiplied())
+{
+    img.ApplyEffect(FCEffectPremultiply());
+}
+
+// using GDI+
+Graphics   gc(hdc);
+auto   gdip_img = FCCodecGdiplus::CreateBitmapReference(img);
+gc.SetInterpolationMode(InterpolationModeHighQualityBicubic);
+gc.DrawImage(gdip_img.get(), 0, 0, 200, 200);
+```
