@@ -22,12 +22,9 @@ public:
         *(DWORD*)this = c;
     }
 
-    void SetFromCOLORREF(COLORREF c)
+    static FCColor FromCOLORREF(COLORREF c)
     {
-        rgbRed = GetRValue(c);
-        rgbGreen = GetGValue(c);
-        rgbBlue = GetBValue(c);
-        rgbReserved = 0xFF;
+        return FCColor(GetRValue(c), GetGValue(c), GetBValue(c), 0xFF);
     }
 
     operator COLORREF() const

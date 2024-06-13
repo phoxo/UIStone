@@ -144,8 +144,8 @@ inline LRESULT CAsyncTaskQueue::MessageWindowProc(UINT msg, WPARAM wParam, LPARA
             task->WaitWorkFinish();
             m_running_task.erase(iter);
 
-            OnExecuteTaskFinish(task.get());
             task->OnTaskFinish();
+            OnExecuteTaskFinish(task.get());
         }
         else { ASSERT(false); }
 
