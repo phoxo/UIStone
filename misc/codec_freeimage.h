@@ -68,7 +68,7 @@ private:
     static FIBITMAP* AllocateFreeImage(const FCImage& img)
     {
         auto   fib = FreeImage_Allocate(img.Width(), img.Height(), img.ColorBits());
-        if (fib)
+        if (fib && (FreeImage_GetPitch(fib) == img.GetStride()))
         {
             memcpy(FreeImage_GetBits(fib), img.GetMemStart(), img.GetPixelBufferSize());
             FreeImage_FlipVertical(fib);

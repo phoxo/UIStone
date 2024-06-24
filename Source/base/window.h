@@ -19,8 +19,10 @@ public:
         return t;
     }
 
-    static BOOL IsVScrollVisible(const CWnd& wnd) { return (wnd.GetStyle() & WS_VSCROLL); }
     static int GetScrollbarWidth() { return GetSystemMetrics(SM_CXVSCROLL); }
+
+#ifdef _AFX
+    static BOOL IsVScrollVisible(const CWnd& wnd) { return (wnd.GetStyle() & WS_VSCROLL); }
 
     static int GetScrollbarPos(CWnd& wnd, int code, int bar = SB_VERT)
     {
@@ -36,6 +38,7 @@ public:
         parent.ScreenToClient(rc);
         return rc;
     }
+#endif
 
     static void LimitWindowInScreen(CRect& rc)
     {

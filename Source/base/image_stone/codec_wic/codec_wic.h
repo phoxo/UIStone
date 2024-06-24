@@ -1,5 +1,6 @@
 #pragma once
 #include "wic_image_save.h"
+#include "wic_locked_pixel_buffer.h"
 
 class FCCodecWIC
 {

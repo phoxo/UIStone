@@ -9,7 +9,7 @@ private:
 public:
     virtual ~FCMessageWindow()
     {
-        ASSERT(!m_wnd);
+        assert(!m_wnd);
         DestroyMessageWindow();
     }
 
@@ -17,7 +17,7 @@ public:
 
     void CreateMessageWindow(PCWSTR window_name = NULL)
     {
-        ASSERT(!m_wnd);
+        assert(!m_wnd);
         DestroyMessageWindow();
 
         CString   clsname;
@@ -39,7 +39,7 @@ public:
         {
             ::SetWindowLongPtr(m_wnd, GWLP_USERDATA, 0);
             ::DestroyWindow(m_wnd);
-            ASSERT(!::IsWindow(m_wnd)); // failure to destroy in another thread
+            assert(!::IsWindow(m_wnd)); // failure to destroy in another thread
         }
         m_wnd = nullptr;
     }

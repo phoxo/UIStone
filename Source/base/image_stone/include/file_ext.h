@@ -17,6 +17,8 @@ enum class ImageFormat
     Dds,
     Dng,
     Svg,
+    Heif,
+    Avif,
     Freeimage,
 };
 
@@ -44,6 +46,8 @@ public:
         if (StrStrI(L",dds,", ext))  return ImageFormat::Dds;
         if (StrStrI(L",dng,", ext))  return ImageFormat::Dng;
         if (StrStrI(L",svg,", ext))  return ImageFormat::Svg;
+        if (StrStrI(L",heif,heic,", ext))  return ImageFormat::Heif;
+        if (StrStrI(L",avif,", ext))  return ImageFormat::Avif;
         if (StrStrI(ImageExtFreeimage(), ext))  return ImageFormat::Freeimage;
         return ImageFormat::Unknown;
     }
@@ -56,5 +60,5 @@ public:
 public:
     static PCWSTR ImageExtJpeg() { return L",jpg,jpeg,jfif,jpe,"; }
     static PCWSTR ImageExtRaw() { return L",3fr,ari,arw,bay,cap,cr2,cr3,crw,dcs,dcr,drf,eip,erf,fff,iiq,k25,kdc,mef,mos,mrw,nef,nrw,orf,ori,pef,ptx,pxn,raf,raw,rw2,rwl,sr2,srf,srw,x3f,dng,"; }
-    static PCWSTR ImageExtFreeimage() { return L",cut,exr,g3,hdr,iff,lbm,j2k,j2c,jng,jp2,jxr,wdp,hdp,koa,pcd,pcx,pfm,pct,pict,pic,pbm,pgm,ppm,ras,sgi,rgb,rgba,bw,wap,wbmp,wbm,xbm,xpm,"; }
+    static PCWSTR ImageExtFreeimage() { return L",exr,g3,hdr,iff,lbm,j2k,j2c,jp2,jxr,wdp,hdp,pcd,pcx,pfm,pct,pict,pic,pbm,pgm,ppm,ras,sgi,rgb,rgba,bw,wap,wbmp,wbm,xbm,xpm,"; }
 };

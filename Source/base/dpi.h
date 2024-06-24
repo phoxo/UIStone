@@ -23,7 +23,7 @@ public:
     {
         if (!v_designed_for_dpi)
         {
-            ASSERT(FALSE);
+            assert(false);
             return 1;
         }
 

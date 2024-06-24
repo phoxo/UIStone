@@ -67,10 +67,7 @@ private:
             if (ifp)
             {
                 CodecInfo   info(*ifp);
-                if (info.m_container_format != GUID_ContainerFormatHeif)
-                {
-                    g_decoders_info.push_back(info);
-                }
+                g_decoders_info.push_back(info);
             }
             unkp = NULL;
         }
