@@ -84,4 +84,23 @@ private:
             }
         }
     };
+
+public:
+    static UINT GetIconMaxSizeFrameIndex(IWICBitmapDecoder* decoder)
+    {
+        UINT   total = CWICFunc::GetFrameCount(decoder);
+        UINT   index = 0;
+        int   max_size = 0;
+        for (UINT i = 0; i < total; i++)
+        {
+            auto   frame = CWICFunc::GetFrame(decoder, i);
+            int   frame_size = CWICFunc::GetBitmapSize(frame).cx;
+            if (frame_size > max_size)
+            {
+                max_size = frame_size;
+                index = i;
+            }
+        }
+        return index;
+    }
 };

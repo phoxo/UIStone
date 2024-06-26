@@ -19,6 +19,11 @@ public:
         return s;
     }
 
+    static float GetCurrentDpiScaleFactor()
+    {
+        return g_current_dpi() / (float)USER_DEFAULT_SCREEN_DPI;
+    }
+
     static int Cast(int v, int v_designed_for_dpi = USER_DEFAULT_SCREEN_DPI)
     {
         if (!v_designed_for_dpi)

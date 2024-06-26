@@ -12,8 +12,8 @@ public:
 protected:
     static int CreateTypeID()
     {
-        static int   s_id = 1;
-        return s_id++;
+        static int   s = 1;
+        return s++;
     }
 };
 //-------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ virtual int GetType() {return TYPE_ID();}
 class CUIEventObserver
 {
 private:
-    static inline std::set<CUIEventObserver*>   * g_list = NULL;
+    static inline std::set<CUIEventObserver*>   * g_list = nullptr;
 
 public:
     CUIEventObserver()
@@ -46,7 +46,7 @@ public:
         if (g_list->size() == 0)
         {
             delete g_list;
-            g_list = NULL;
+            g_list = nullptr;
         }
     }
 

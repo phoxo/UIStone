@@ -27,6 +27,7 @@ public:
 public:
     void Read(IWICBitmapFrameDecode* frame_decode)
     {
+        if (!frame_decode) { return; }
         m_dpi = CWICFunc::GetResolution(frame_decode);
         EnumAllMetadata(frame_decode);
     }
