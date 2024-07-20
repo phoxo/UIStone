@@ -32,7 +32,7 @@ public:
         EnumAllMetadata(frame_decode);
     }
 
-    BOOL IsNeedSwapWidthHeight() const
+    bool IsNeedSwapWidthHeight() const
     {
         return (GetRotateFlag() & WICBitmapTransformRotate90);
     }

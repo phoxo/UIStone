@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class CAsyncTask
 {
@@ -17,7 +17,7 @@ private:
 
 public:
     const int   m_id = GenerateID();
-    BOOL   m_is_valid = TRUE;
+    BOOL   m_is_valid = true;
 
     enum { MSG_USER_BEGIN = (WM_APP + 100) };
 
@@ -68,4 +68,4 @@ private:
     friend class CAsyncTaskQueue;
 };
 
-_UISTONE_END
+UISTONE_END

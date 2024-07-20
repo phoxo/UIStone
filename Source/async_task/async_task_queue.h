@@ -1,20 +1,26 @@
 #pragma once
 #include "async_task.h"
 
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class CAsyncTaskQueue : public FCMessageWindow
 {
 private:
     std::map<int, std::shared_ptr<CAsyncTask>>   m_running_task;
     std::deque<std::shared_ptr<CAsyncTask>>   m_waiting_task;
-    CString   m_queue_wnd_name;
+    const CString   m_queue_wnd_name;
     int   m_max_thread_count = 1; // default maximum 1 thread
 
 public:
-    CAsyncTaskQueue(PCWSTR window_name = L"")
+    struct AddTaskOption
     {
-        m_queue_wnd_name = window_name;
+        bool   dispatch_after_add = true;
+        bool   add_front = false;
+    };
+
+public:
+    CAsyncTaskQueue(PCWSTR window_name = L"") : m_queue_wnd_name(window_name)
+    {
         CreateMessageWindow(window_name);
     }
     ~CAsyncTaskQueue()
@@ -49,10 +55,13 @@ public:
 
     const auto& GetRunningTask() const { return m_running_task; }
 
-    void AddAsyncTask(CAsyncTask* task, BOOL dispatch_after_add = TRUE)
+    void AddAsyncTask(CAsyncTask* task, const AddTaskOption& option = AddTaskOption())
     {
-        m_waiting_task.push_back(std::shared_ptr<CAsyncTask>(task));
-        if (dispatch_after_add)
+        if (option.add_front)
+            m_waiting_task.push_front(std::shared_ptr<CAsyncTask>(task));
+        else
+            m_waiting_task.push_back(std::shared_ptr<CAsyncTask>(task));
+        if (option.dispatch_after_add)
         {
             DispatchTask();
         }
@@ -65,7 +74,7 @@ public:
 
     void InvalidateAllRunningTask() const
     {
-        for (auto& iter : m_running_task) { iter.second->m_is_valid = FALSE; }
+        for (auto& iter : m_running_task) { iter.second->m_is_valid = false; }
     }
 
 protected:
@@ -165,4 +174,4 @@ inline LRESULT CAsyncTaskQueue::MessageWindowProc(UINT msg, WPARAM wParam, LPARA
     return __super::MessageWindowProc(msg, wParam, lParam);
 }
 
-_UISTONE_END
+UISTONE_END

@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 // images arranged horizontally one by one
 class CSequenceImage
@@ -105,4 +105,4 @@ private:
     }
 };
 
-_UISTONE_END
+UISTONE_END

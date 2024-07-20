@@ -39,6 +39,7 @@
 
 #include "effect/distort_base.h"
 
+#include "d2d/svg_drawer.h"
 
 class CImageStoneInitializer
 {

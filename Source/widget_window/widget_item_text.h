@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class CWidgetItemText : public CWidgetItem
 {
@@ -29,4 +29,4 @@ protected:
     }
 };
 
-_UISTONE_END
+UISTONE_END

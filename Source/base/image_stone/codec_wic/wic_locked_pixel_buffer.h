@@ -28,7 +28,7 @@ public:
         assert(m_data);
     }
 
-    BOOL IsFormat32bpp() const
+    bool IsFormat32bpp() const
     {
         return (m_data && (m_width * 4 == m_stride));
     }

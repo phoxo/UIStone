@@ -52,11 +52,6 @@ public:
         return ImageFormat::Unknown;
     }
 
-    static BOOL IsImageFile(PCWSTR file_name)
-    {
-        return (GetType(file_name) != ImageFormat::Unknown);
-    }
-
 public:
     static PCWSTR ImageExtJpeg() { return L",jpg,jpeg,jfif,jpe,"; }
     static PCWSTR ImageExtRaw() { return L",3fr,ari,arw,bay,cap,cr2,cr3,crw,dcs,dcr,drf,eip,erf,fff,iiq,k25,kdc,mef,mos,mrw,nef,nrw,orf,ori,pef,ptx,pxn,raf,raw,rw2,rwl,sr2,srf,srw,x3f,dng,"; }

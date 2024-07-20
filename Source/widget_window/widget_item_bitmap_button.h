@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class CWidgetItemBitmapButton : public CWidgetItem
 {
@@ -45,4 +45,4 @@ private:
     }
 };
 
-_UISTONE_END
+UISTONE_END

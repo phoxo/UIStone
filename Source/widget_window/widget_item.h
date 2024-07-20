@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class CWidgetItem
 {
@@ -26,21 +26,22 @@ public:
 
     int GetID() const { return m_id; }
     void SetTip(PCWSTR tip_text) { m_tip = tip_text; }
+    auto& GetTip() const { return m_tip; }
     void SetRectOnCanvas(const CRect& rect_on_window) { m_rect_on_canvas = rect_on_window; }
-    const CRect& GetRectOnCanvas() const { return m_rect_on_canvas; }
+    auto& GetRectOnCanvas() const { return m_rect_on_canvas; }
     // the top left point is (0,0)
     CRect GetItemClientRect() const { return CRect(CPoint(), m_rect_on_canvas.Size()); }
     void ModifyStyle(int remove_style, int add_style) { m_style = ((m_style & ~remove_style) | add_style); }
     int GetStyle() const { return m_style; }
 
-    BOOL IsHighlight() const { return (m_inner_status & MouseHighlight); }
-    BOOL IsMouseHovering() const { return (m_inner_status & MouseHover); }
-    BOOL IsVisible() const { return (m_inner_status & WidgetVisible); }
-    BOOL IsEnable() const { return (m_inner_status & WidgetEnable); }
-    BOOL IsCheck() const { return (m_inner_status & WidgetCheck); }
-    void SetVisible(BOOL v) { v ? SetInnerStatus(0, WidgetVisible) : SetInnerStatus(WidgetVisible, 0); }
-    void SetEnable(BOOL v) { v ? SetInnerStatus(0, WidgetEnable) : SetInnerStatus(WidgetEnable, 0); }
-    void SetCheck(BOOL v) { v ? SetInnerStatus(0, WidgetCheck) : SetInnerStatus(WidgetCheck, 0); }
+    bool IsHighlight() const { return (m_inner_status & MouseHighlight); }
+    bool IsMouseHovering() const { return (m_inner_status & MouseHover); }
+    bool IsVisible() const { return (m_inner_status & WidgetVisible); }
+    bool IsEnable() const { return (m_inner_status & WidgetEnable); }
+    bool IsCheck() const { return (m_inner_status & WidgetCheck); }
+    void SetVisible(bool v) { v ? SetInnerStatus(0, WidgetVisible) : SetInnerStatus(WidgetVisible, 0); }
+    void SetEnable(bool v) { v ? SetInnerStatus(0, WidgetEnable) : SetInnerStatus(WidgetEnable, 0); }
+    void SetCheck(bool v) { v ? SetInnerStatus(0, WidgetCheck) : SetInnerStatus(WidgetCheck, 0); }
 
 protected:
     virtual void OnMouseEnter() {}
@@ -56,10 +57,10 @@ protected:
     }
 
 private:
-    void SetHighlight(BOOL v) { v ? SetInnerStatus(0, MouseHighlight) : SetInnerStatus(MouseHighlight, 0); }
-    void SetHover(BOOL v) { v ? SetInnerStatus(0, MouseHover) : SetInnerStatus(MouseHover, 0); }
+    void SetHighlight(bool v) { v ? SetInnerStatus(0, MouseHighlight) : SetInnerStatus(MouseHighlight, 0); }
+    void SetHover(bool v) { v ? SetInnerStatus(0, MouseHover) : SetInnerStatus(MouseHover, 0); }
     void SetInnerStatus(int remove, int add) { m_inner_status = ((m_inner_status & ~remove) | add); }
     friend class CWidgetWindow;
 };
 
-_UISTONE_END
+UISTONE_END

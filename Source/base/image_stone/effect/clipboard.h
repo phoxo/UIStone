@@ -22,7 +22,7 @@ private:
     {
         auto   mem = GlobalAlloc(GMEM_MOVEABLE, img.GetPixelBufferSize() + sizeof(BITMAPINFOHEADER));
         auto   ptr = (BITMAPINFOHEADER*)GlobalLock(mem);
-        FCBaseHelper::InitBitmapInfoHeader(*ptr, img.Width(), img.Height(), img.ColorBits(), FALSE);
+        FCBaseHelper::InitBitmapInfoHeader(*ptr, img.Width(), img.Height(), img.ColorBits(), false);
 
         FCEffectFlip   flip;
         flip.EnableParallelAccelerate(true);

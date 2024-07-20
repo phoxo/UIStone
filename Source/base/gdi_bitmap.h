@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 // DIB or DDB, 如果是32位色，必须Premultiplied alpha
 class CGDIBitmap
@@ -62,4 +62,4 @@ public:
     }
 };
 
-_UISTONE_END
+UISTONE_END

@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class FCMessageWindow
 {
@@ -62,4 +62,4 @@ private:
     }
 };
 
-_UISTONE_END
+UISTONE_END

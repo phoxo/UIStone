@@ -37,6 +37,11 @@ public:
         return *(RGBA32bit*)this;
     }
 
+    operator Gdiplus::Color() const
+    {
+        return Gdiplus::Color(rgbRed, rgbGreen, rgbBlue);
+    }
+
     static void Premultiply(RGBA32bit& pixel)
     {
         RGBA32bit   px = pixel;
@@ -101,7 +106,7 @@ public:
         down.r = (BYTE)((up.r - down.r) * t + down.r + 0.5f);
     }
 
-    BOOL IsColorLight() const
+    bool IsColorLight() const
     {
         return (((5 * rgbGreen) + (2 * rgbRed) + rgbBlue) > (8 * 128));
     }

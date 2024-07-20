@@ -1,11 +1,11 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 /// Monitor mouse enter/leave window.
 class FCTrackMouseHover
 {
 private:
-    BOOL   m_track = FALSE;
+    BOOL   m_track = false;
 
 public:
     virtual ~FCTrackMouseHover() {}
@@ -43,7 +43,7 @@ public:
             {
                 // it's unnecessary to override OnKillFocus,
                 // because we can receive WM_MOUSELEAVE when the window deactive.
-                m_track = FALSE;
+                m_track = false;
                 OnMouse_LeaveWnd();
                 ::InvalidateRect(hWnd, NULL, TRUE);
             }
@@ -51,4 +51,4 @@ public:
     }
 };
 
-_UISTONE_END
+UISTONE_END

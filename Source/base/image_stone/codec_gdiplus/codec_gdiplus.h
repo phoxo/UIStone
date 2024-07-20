@@ -1,8 +1,4 @@
 #pragma once
-/// @cond
-#include <GdiPlus.h>
-#pragma comment (lib, "GdiPlus.lib")
-/// @endcond
 #include "image_property_gdiplus.h"
 #include "gdiplus_encode_param.h"
 

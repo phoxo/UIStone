@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class CLanguageSectionLoader
 {
@@ -23,4 +23,4 @@ public:
     }
 };
 
-_UISTONE_END
+UISTONE_END

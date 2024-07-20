@@ -91,10 +91,10 @@ public:
             if (m_running_task.empty())
                 break;
 
-            WaitFinishEvent(FALSE); // wait only one task finish
+            WaitFinishEvent(false); // wait only one task finish
             if (progress && !progress->UpdateProgress(GetCurrentPercent()))
             {
-                WaitFinishEvent(TRUE); // wait all finish
+                WaitFinishEvent(true); // wait all finish
                 break;
             }
         }
@@ -150,7 +150,7 @@ private:
         }
     }
 
-    void WaitFinishEvent(BOOL wait_all)
+    void WaitFinishEvent(bool wait_all)
     {
         if (m_running_task.empty())
             return;

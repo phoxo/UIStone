@@ -5,13 +5,13 @@
 class FCCodecWIC
 {
 public:
-    static bool LoadFile(PCWSTR image_path, FCImage& img, REFWICPixelFormatGUID output_format = WICNormal32bpp, CWICMetadata* meta = NULL, BOOL use_embedded_icc = FALSE)
+    static bool LoadFile(PCWSTR image_path, FCImage& img, REFWICPixelFormatGUID output_format = WICNormal32bpp, CWICMetadata* meta = NULL, bool use_embedded_icc = false)
     {
         auto   stm = CWICFunc::CreateStreamFromFileNoLock(image_path);
         return LoadStream(stm, img, output_format, meta, use_embedded_icc);
     }
 
-    static bool LoadStream(IStream* stm, FCImage& img, REFWICPixelFormatGUID output_format, CWICMetadata* meta = NULL, BOOL use_embedded_icc = FALSE)
+    static bool LoadStream(IStream* stm, FCImage& img, REFWICPixelFormatGUID output_format, CWICMetadata* meta = NULL, bool use_embedded_icc = false)
     {
         auto   decoder = CWICFunc::CreateDecoderFromStream(stm);
         auto   first_frame = CWICFunc::GetFrame(decoder, 0); // just load first frame
@@ -23,7 +23,7 @@ public:
         return LoadFrame(first_frame, img, output_format, use_embedded_icc);
     }
 
-    static bool LoadFrame(IWICBitmapFrameDecode* frame_decode, FCImage& img, REFWICPixelFormatGUID output_format, BOOL use_embedded_icc = FALSE)
+    static bool LoadFrame(IWICBitmapFrameDecode* frame_decode, FCImage& img, REFWICPixelFormatGUID output_format, bool use_embedded_icc = false)
     {
         // 先改变格式很重要
         // 1. 碰到过一次格式不一样apply ICC时卡死
@@ -49,11 +49,8 @@ public:
         return Load(dest, img, output_format); // <-- 格式一致
     }
 
-    static bool Load(IWICBitmapSource* src_bmp, FCImage& img, WICPixelFormatGUID output_format = GUID_WICPixelFormatDontCare)
+    static bool Load(IWICBitmapSource* src_bmp, FCImage& img, WICPixelFormatGUID output_format)
     {
-        if (output_format == GUID_WICPixelFormatDontCare)
-            output_format = CWICFunc::GetPixelFormat(src_bmp);
-
         int   bpp = CWICFunc::GetBitsPerPixel(output_format);
         int   attr = ((output_format == WICPremultiplied32bpp) ? FCImage::PremultipliedAlpha : 0);
         auto   src = CWICFunc::ConvertFormat(src_bmp, output_format);
@@ -64,6 +61,7 @@ public:
             {
                 if (src->CopyPixels(NULL, img.GetStride(), img.GetPixelBufferSize(), (BYTE*)img.GetMemStart()) == S_OK)
                     return true;
+                // 如果没装hevc ext, heif文件CopyPixels返回0xc00d5212
             }
         }
         assert(false);
@@ -71,7 +69,7 @@ public:
         return false;
     }
 
-    static IWICBitmapSourcePtr ApplyEmbeddedICC(IWICBitmapSourcePtr src_bmp, IWICColorContextPtr src_icc, BOOL restore_from_srgb = FALSE)
+    static IWICBitmapSourcePtr ApplyEmbeddedICC(IWICBitmapSourcePtr src_bmp, IWICColorContextPtr src_icc, bool restore_from_srgb = false)
     {
         auto   dest_icc = CWICFunc::CreateSystemColorContext_SRGB();
         if (restore_from_srgb)

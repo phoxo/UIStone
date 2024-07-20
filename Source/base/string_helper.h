@@ -1,6 +1,6 @@
 #pragma once
 #include <deque>
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class CStringHelper
 {
@@ -27,14 +27,14 @@ public:
     }
 
     template<class T>
-    static CString FormatOneValue(PCTSTR fmt, const T& v)
+    static CString FormatOneValue(PCWSTR fmt, const T& v)
     {
         CString   k;
         k.Format(fmt, v);
         return k;
     }
 
-    static int FindNoCase(const std::deque<CString>& vec, PCTSTR search_str)
+    static int FindNoCase(const std::deque<CString>& vec, PCWSTR search_str)
     {
         int   idx = 0;
         for (auto& iter : vec)
@@ -47,4 +47,4 @@ public:
     }
 };
 
-_UISTONE_END
+UISTONE_END

@@ -24,17 +24,17 @@ public:
         return WICBitmapTransformRotate0;
     }
 
-    static BOOL Write(IWICMetadataQueryWriter* writer, int orientation)
+    static bool Write(IWICMetadataQueryWriter* writer, int orientation)
     {
         orientation = std::clamp(orientation, 1, 8);
 
         // 不要用RemoveMetadataByName删除tag，否则只旋转tag时fast encode会失败
         CComPROPVARIANT   prop((USHORT)orientation);
         if (writer && (writer->SetMetadataByName(OrientationKeyJpeg(), &prop) == S_OK))
-            return TRUE;
+            return true;
 
         assert(false);
-        return FALSE;
+        return false;
     }
 
     static WICBitmapTransformOptions ToWICFlipRotate(int orientation)

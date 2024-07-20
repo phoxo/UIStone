@@ -9,9 +9,9 @@ public:
         if (img.ColorBits() != 32)
             return false;
 
-        int   pixel_count = img.Width() * img.Height();
+        int   total = img.Width() * img.Height();
         auto   ptr = (RGBA32bit*)img.GetMemStart();
-        for (int i = 0; i < pixel_count; i++, ptr++)
+        for (int i = 0; i < total; i++, ptr++)
         {
             if (ptr->a != 0xFF)
                 return false;

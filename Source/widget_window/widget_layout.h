@@ -1,39 +1,71 @@
 #pragma once
 #include "widget_item.h"
-_UISTONE_BEGIN
+UISTONE_BEGIN
 typedef  std::unique_ptr<CWidgetItem>  CWidgetItemPtr;
 
 class CWidgetLayout
 {
+private:
+    bool   m_modifying_scrollbar_visible = false;
+
 public:
     virtual ~CWidgetLayout() {}
     virtual void LayoutWidget(CWnd& wnd, std::deque<CWidgetItemPtr>& child_items) = 0;
 
 protected:
     /// Set window's vertical scrollbar range.
-    static void SetVScrollRange(CWnd& wnd, int canvas_height)
+    void SetVScrollRange(CWnd& wnd, int canvas_height)
     {
-        BOOL   sb_visible = FCWnd::IsVScrollVisible(wnd);
         int   wnd_height = FCWnd::GetWindowRect(wnd).Height();
-        if (canvas_height > wnd_height)
-        {
-            if (!sb_visible)
-            {
-                wnd.ShowScrollBar(SB_VERT, TRUE);
-            }
+        SetScrollbarRange(wnd, canvas_height, wnd_height, SB_VERT);
+    }
 
-            SCROLLINFO   si = { 0, SIF_RANGE | SIF_PAGE };
-            si.nMax = canvas_height - 1; // note -1
-            si.nPage = wnd_height;
-            wnd.SetScrollInfo(SB_VERT, &si, TRUE);
+    void SetHScrollRange(CWnd& wnd, int canvas_width)
+    {
+        int   wnd_width = FCWnd::GetWindowRect(wnd).Width();
+        SetScrollbarRange(wnd, canvas_width, wnd_width, SB_HORZ);
+    }
+
+private:
+    void SetScrollbarRange(CWnd& wnd, int canvas_size, int wnd_size, int bar)
+    {
+        // 显示/隐藏滚动条ShowScrollBar里面会send WM_SIZE再一次layout，这里返回
+        if (m_modifying_scrollbar_visible)
+            return;
+
+        m_modifying_scrollbar_visible = true;
+        bool   visible = IsAnyScrollbarVisible(wnd);
+        if (canvas_size > wnd_size)
+        {
+            if (!visible)
+            {
+                wnd.SetScrollPos(bar, 0, FALSE);
+                wnd.ShowScrollBar(bar, TRUE);
+            }
+            CallSetScrollInfo(wnd, canvas_size, wnd_size, bar);
         }
         else
         {
-            if (sb_visible)
+            if (visible)
             {
-                wnd.ShowScrollBar(SB_VERT, FALSE);
+                wnd.ShowScrollBar(bar, FALSE);
             }
         }
+        m_modifying_scrollbar_visible = false;
+    }
+
+    static void CallSetScrollInfo(CWnd& wnd, int canvas_size, int wnd_size, int bar)
+    {
+        SCROLLINFO   si = { 0, SIF_RANGE | SIF_PAGE };
+        si.nMax = canvas_size - 1; // note -1
+        si.nPage = wnd_size;
+        wnd.SetScrollInfo(bar, &si, TRUE);
+    }
+
+    static bool IsAnyScrollbarVisible(const CWnd& wnd)
+    {
+        DWORD   t = wnd.GetStyle(); // 目前的窗口都只显示一个H or V滚动条
+        return ((t & WS_VSCROLL) || (t & WS_HSCROLL));
     }
 };
 //-------------------------------------------------------------------------------------
@@ -60,4 +92,4 @@ private:
     }
 };
 
-_UISTONE_END
+UISTONE_END

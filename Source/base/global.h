@@ -5,8 +5,8 @@
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 
-#define _UISTONE_BEGIN  namespace uistone {
-#define _UISTONE_END        }
+#define UISTONE_BEGIN  namespace uistone {
+#define UISTONE_END        }
 
 //-------------------------------------------------------------------------------------
 /// Auto init COM.
@@ -19,6 +19,8 @@ public:
 };
 //-------------------------------------------------------------------------------------
 // headers
+#include "dc.h"
+#include "gdiplus.h"
 #include "dpi.h"
 #include "file.h"
 #include "performance_test.h"
@@ -29,7 +31,7 @@ public:
 #include "language_text.h"
 #include "language_section_loader.h"
 #include "font.h"
-#include "ui_event_observer.h"
+#include "event_observer.h"
 #include "sequence_image.h"
 #include "gdi_bitmap.h"
 #include "window.h"

@@ -238,7 +238,7 @@ private:
         std::vector<BYTE>   buf(info_byte, (BYTE)0);
         auto   info = (BITMAPINFO*)buf.data();
 
-        FCBaseHelper::InitBitmapInfoHeader(info->bmiHeader, m_width, m_height, m_bpp, TRUE);
+        FCBaseHelper::InitBitmapInfoHeader(info->bmiHeader, m_width, m_height, m_bpp, true);
         m_DIB_Handle = CreateDIBSection(NULL, info, DIB_RGB_COLORS, (VOID**)&m_pixel, NULL, 0);
     }
 

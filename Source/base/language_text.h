@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class CLanguageText
 {
@@ -76,6 +76,7 @@ public:
         if (StrStrI(name, L"ja") == name)  return L"ja.ini";
         if (StrStrI(name, L"ko") == name)  return L"ko.ini";
         if (StrStrI(name, L"vi") == name)  return L"vi.ini";
+        if (StrStrI(name, L"uk") == name)  return L"uk.ini";
         return L"en.ini";
     }
 
@@ -97,4 +98,4 @@ private:
     static CString GetLanguageFile(PCWSTR filename) { return LANGUAGE_FOLDER() + filename; }
 };
 
-_UISTONE_END
+UISTONE_END

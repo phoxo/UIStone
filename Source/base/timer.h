@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 //-------------------------------------------------------------------------------------
 /**
@@ -24,7 +24,7 @@ public:
     }
 
     /// Is timer started.
-    BOOL IsTimerStarted() const { return (m_timer_id != 0); }
+    bool IsTimerStarted() const { return (m_timer_id != 0); }
 
     /**
         Start timer\n
@@ -91,4 +91,4 @@ private:
     }
 };
 
-_UISTONE_END
+UISTONE_END

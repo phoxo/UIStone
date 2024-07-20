@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class CWidgetItemImage : public CWidgetItem
 {
@@ -31,4 +31,4 @@ protected:
     }
 };
 
-_UISTONE_END
+UISTONE_END

@@ -2,7 +2,7 @@
 #include <atlpath.h>
 #include <Shlobj.h>
 #pragma comment(lib, "Shell32.lib")
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 /// File helper.
 class FCFile
@@ -78,11 +78,11 @@ public:
     }
 
     /// Read file to memory.
-    static BOOL Read(PCWSTR filepath, std::vector<BYTE>& file_data)
+    static bool Read(PCWSTR filepath, std::vector<BYTE>& file_data)
     {
         file_data.clear();
 
-        BOOL     b = FALSE;
+        bool     b = false;
         HANDLE   f = CreateFile(filepath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
         if (f != INVALID_HANDLE_VALUE)
         {
@@ -98,7 +98,7 @@ public:
             }
             else
             {
-                b = TRUE;
+                b = true;
             }
             CloseHandle(f);
         }
@@ -107,11 +107,11 @@ public:
     }
 
     /// Write buffer to file, if file already exist, it will be delete before write.
-    static BOOL Write(PCWSTR filepath, const void* p, int write_bytes)
+    static bool Write(PCWSTR filepath, const void* p, int write_bytes)
     {
         RemoveReadOnlyAttribute(filepath);
 
-        BOOL     b = FALSE;
+        bool     b = false;
         HANDLE   f = CreateFile(filepath, GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if (f != INVALID_HANDLE_VALUE)
         {
@@ -135,13 +135,13 @@ public:
 
     /// @name Read/Write INI file.
     //@{
-    /// Read string key from ini file, return FALSE if key doesn't exist.
-    static BOOL INIRead(PCWSTR filepath, PCWSTR key, CString& s, PCWSTR section = L"app")
+    /// Read string key from ini file, return false if key doesn't exist.
+    static bool INIRead(PCWSTR filepath, PCWSTR key, CString& s, PCWSTR section = L"app")
     {
         WCHAR   b[256] = { 0 };
         DWORD   dwWrite = GetPrivateProfileString(section, key, L"\n", b, 256, filepath);
         if ((b[0] == '\n') && (b[1] == 0))
-            return FALSE;
+            return false;
 
         if (dwWrite > (256 - 4))
         {
@@ -153,23 +153,23 @@ public:
         {
             s = b;
         }
-        return TRUE;
+        return true;
     }
 
-    /// Read int key from ini file, return FALSE if key doesn't exist.
-    static BOOL INIRead(PCWSTR filepath, PCWSTR key, INT64& n, PCWSTR section = L"app")
+    /// Read int key from ini file, return false if key doesn't exist.
+    static bool INIRead(PCWSTR filepath, PCWSTR key, INT64& n, PCWSTR section = L"app")
     {
         WCHAR   b[32] = { 0 };
         GetPrivateProfileString(section, key, L"\n", b, 32, filepath);
         if ((b[0] == '\n') && (b[1] == 0))
-            return FALSE;
+            return false;
         if (b[0] == 0)
-            return FALSE;
+            return false;
 
         n = _ttoi64(b);
-        return TRUE;
+        return true;
     }
     //@}
 };
 
-_UISTONE_END
+UISTONE_END

@@ -13,6 +13,8 @@
 #include <vector>
 #include <deque>
 #include <algorithm>
+#include <GdiPlus.h>
+#pragma comment (lib, "GdiPlus.lib")
 /// @endcond
 
 //-------------------------------------------------------------------------------------

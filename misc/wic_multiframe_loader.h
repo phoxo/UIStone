@@ -8,10 +8,10 @@ private:
     UINT   m_total;
     UINT   m_current_frame;
     IWICBitmapFrameDecodePtr   m_frame;
-    BOOL   m_use_embedded_icc;
+    bool   m_use_embedded_icc;
 
 public:
-    CWICMultiframeLoader(PCWSTR image_path, BOOL use_embedded_icc = TRUE)
+    CWICMultiframeLoader(PCWSTR image_path, bool use_embedded_icc = true)
     {
         m_decoder = CWICFunc::CreateDecoderFromFileNoLock(image_path);
         m_format = CWICFunc::GetContainerFormat(m_decoder);
@@ -21,9 +21,9 @@ public:
         m_use_embedded_icc = use_embedded_icc;
     }
 
-    BOOL IsWebp() const { return (m_format == GUID_ContainerFormatWebp); }
-    BOOL IsGif() const { return (m_format == GUID_ContainerFormatGif); }
-    BOOL IsCurrentFrameValid() const { return (m_frame != NULL); }
+    bool IsWebp() const { return (m_format == GUID_ContainerFormatWebp); }
+    bool IsGif() const { return (m_format == GUID_ContainerFormatGif); }
+    bool IsCurrentFrameValid() const { return (m_frame != NULL); }
     UINT GetCurrentFrameIndex() const { return m_current_frame; }
 
     void SelectNextFrame()
@@ -66,7 +66,7 @@ private:
         int   m_result = 0;
 
     public:
-        int FindDuration(IWICBitmapFrameDecode* frame_decode, BOOL is_gif)
+        int FindDuration(IWICBitmapFrameDecode* frame_decode, bool is_gif)
         {
             m_meta_key.Set(is_gif ? L"Delay" : L"FrameDuration");
             EnumAllMetadata(frame_decode);

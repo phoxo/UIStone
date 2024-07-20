@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class COwnerDrawButton : public CButton,
                          public FCTrackMouseHover
@@ -18,7 +18,7 @@ public:
     void SetTooltipText(PCWSTR tip) { m_tip = tip; }
 
 protected:
-    BOOL IsButtonHighlight() const { return (GetState() & BST_PUSHED) ? TRUE : FALSE; }
+    bool IsButtonHighlight() const { return (GetState() & BST_PUSHED); }
 
     virtual void OnDrawButton(CDC& dc, CRect client_rect)
     {
@@ -89,4 +89,4 @@ private:
     }
 };
 
-_UISTONE_END
+UISTONE_END

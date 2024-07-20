@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 /// Window helper.
 class FCWnd
@@ -22,15 +22,6 @@ public:
     static int GetScrollbarWidth() { return GetSystemMetrics(SM_CXVSCROLL); }
 
 #ifdef _AFX
-    static BOOL IsVScrollVisible(const CWnd& wnd) { return (wnd.GetStyle() & WS_VSCROLL); }
-
-    static int GetScrollbarPos(CWnd& wnd, int code, int bar = SB_VERT)
-    {
-        SCROLLINFO   si = { 0 };
-        wnd.GetScrollInfo(bar, &si);
-        return ((code == SB_THUMBPOSITION) || (code == SB_THUMBTRACK)) ? si.nTrackPos : si.nPos;
-    }
-
     static CRect GetChildRectOnParent(const CWnd& parent, int child_ctrl_id)
     {
         CRect   rc;
@@ -56,4 +47,4 @@ public:
     }
 };
 
-_UISTONE_END
+UISTONE_END

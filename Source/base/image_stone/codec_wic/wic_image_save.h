@@ -33,12 +33,12 @@ public:
         assert(IsEncoderAvailable());
     }
 
-    BOOL IsEncoderAvailable() const
+    bool IsEncoderAvailable() const
     {
         return (m_frame_encode != NULL);
     }
 
-    BOOL IsJPEG() const { return (m_image_format == GUID_ContainerFormatJpeg); }
+    bool IsJPEG() const { return (m_image_format == GUID_ContainerFormatJpeg); }
 
 /*    void CopyMetadata(IWICBitmapFrameDecodePtr source_meta)
     {
@@ -54,18 +54,18 @@ public:
         }
     }*/
 
-    BOOL SetICC(IWICColorContext* icc)
+    bool SetICC(IWICColorContext* icc)
     {
         if (m_frame_encode && icc && IsICCSaveSupported(icc))
         {
             return (m_frame_encode->SetColorContexts(1, &icc) == S_OK);
         }
-        return FALSE;
+        return false;
     }
 
-    BOOL WriteFile(IWICBitmapSourcePtr src)
+    bool WriteFile(IWICBitmapSourcePtr src)
     {
-        BOOL   t[3] = { 0 };
+        bool   t[3] = { 0 };
         try
         {
             t[0] = (m_frame_encode->WriteSource(src, NULL) == S_OK);
@@ -77,12 +77,12 @@ public:
     }
 
 private:
-    BOOL IsICCSaveSupported(IWICColorContext* icc) const
+    bool IsICCSaveSupported(IWICColorContext* icc) const
     {
         if (icc)
         {
             if (IsJPEG()) // jpeg支持所有类型icc
-                return TRUE;
+                return true;
 
             if ((m_image_format == GUID_ContainerFormatPng) || (m_image_format == GUID_ContainerFormatTiff))
             {
@@ -92,10 +92,10 @@ private:
                 return (len != 0);
             }
         }
-        return FALSE;
+        return false;
     }
 
-    BOOL SetOrientationTag(int orientation)
+    bool SetOrientationTag(int orientation)
     {
         if (m_frame_encode)
         {
@@ -103,7 +103,7 @@ private:
             m_frame_encode->GetMetadataQueryWriter(&writer);
             return CWICMetadataOrientation::Write(writer, orientation);
         }
-        return FALSE;
+        return false;
     }
 
     void CreateFrameEncode(int jpeg_quality)

@@ -1,5 +1,5 @@
 #pragma once
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class CDPICalculator
 {
@@ -19,7 +19,7 @@ public:
         return s;
     }
 
-    static float GetCurrentDpiScaleFactor()
+    static float GetDPIScaleFactor()
     {
         return g_current_dpi() / (float)USER_DEFAULT_SCREEN_DPI;
     }
@@ -36,4 +36,4 @@ public:
     }
 };
 
-_UISTONE_END
+UISTONE_END

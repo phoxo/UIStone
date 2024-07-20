@@ -7,7 +7,7 @@
 class FCBaseHelper
 {
 public:
-    static void InitBitmapInfoHeader(BITMAPINFOHEADER& v, int width, int height, int bpp, BOOL top_to_bottom = TRUE)
+    static void InitBitmapInfoHeader(BITMAPINFOHEADER& v, int width, int height, int bpp, bool top_to_bottom = true)
     {
         ZeroMemory(&v, sizeof(v));
         v.biSize = sizeof(v);
@@ -25,7 +25,7 @@ public:
         return CreateMemStream(ptr, SizeofResource(mod, hres));
     }
 
-    static RECT CalculateFitWindow(SIZE obj_size, CRect wnd_rect)
+    static CRect CalculateFitWindow(SIZE obj_size, const CRect& wnd_rect)
     {
         int   w = wnd_rect.Width();
         int   h = wnd_rect.Height();
@@ -55,7 +55,7 @@ public:
         return p->Release();
     }
 
-    static BOOL IsValidDate(int year, int month, int day)
+    static bool IsValidDate(int year, int month, int day)
     {
         return (year > 1970) && (year < 2900) && (month >= 1) && (month <= 12) && (day >= 1) && (day <= 31);
     }
@@ -65,5 +65,15 @@ public:
         IStreamPtr   v;
         if (ptr) { v.Attach(SHCreateMemStream((const BYTE*)ptr, mem_size)); }
         return v;
+    }
+
+    template<class T>
+    static T& LazyCreateSingleton(std::unique_ptr<T>& obj)
+    {
+        if (!obj)
+        {
+            obj = std::make_unique<T>();
+        }
+        return *obj;
     }
 };

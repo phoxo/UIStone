@@ -1,7 +1,7 @@
 #pragma once
 #include <timeapi.h>
 #pragma comment (lib, "Winmm.lib")
-_UISTONE_BEGIN
+UISTONE_BEGIN
 
 class FCPerformanceTest
 {
@@ -41,4 +41,4 @@ public:
     }
 };
 
-_UISTONE_END
+UISTONE_END
