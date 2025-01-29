@@ -65,7 +65,7 @@ public:
 
     bool WriteFile(IWICBitmapSourcePtr src)
     {
-        bool   t[3] = { 0 };
+        bool   t[3] = {};
         try
         {
             t[0] = (m_frame_encode->WriteSource(src, NULL) == S_OK);
@@ -131,7 +131,7 @@ private:
     {
         _variant_t   val(quality);
         _bstr_t   prop_name = L"ImageQuality";
-        PROPBAG2   str = { 0 };
+        PROPBAG2   str = {};
         str.pstrName = prop_name;
         if (prop) { prop->Write(1, &str, &val); }
     }

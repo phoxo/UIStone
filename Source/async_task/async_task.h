@@ -24,7 +24,6 @@ public:
 public:
     CAsyncTask() {}
     virtual ~CAsyncTask() { assert(!m_work); }
-    HWND GetParentQueue() const { return m_host_queue; }
 
     void WaitWorkFinish()
     {
@@ -37,7 +36,7 @@ public:
     }
 
     // 有的时候可能要排队很久，等轮到执行的时候再检查一下
-    virtual BOOL CheckValidBeforeExecute()
+    virtual bool CheckValidBeforeExecute()
     {
         return m_is_valid;
     }
@@ -50,7 +49,7 @@ public:
     // 2) 如果task被父队列强制丢弃，不会收到此回调
     virtual void OnTaskFinish() {}
 
-    // 不能从task中调用SendMessage直接发给窗口，CAsyncTaskQueue可能会阻塞等待任务结束，形成死锁
+    // 禁止从task中调用SendMessage直接发给窗口，CAsyncTaskQueue销毁时可能会阻塞等待任务结束，形成死锁
     // 使用这个代理函数可以安全的给主线程SendMessage
     LRESULT AgentSendMessage(HWND wnd, UINT msg, WPARAM wParam = 0, LPARAM lParam = 0)
     {

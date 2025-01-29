@@ -33,23 +33,24 @@ public:
             ext.Delete(0, 1);
         ext = L"," + ext + L",";
 
-        if (StrStrI(ImageExtJpeg(), ext))  return ImageFormat::Jpeg;
-        if (StrStrI(L",png,", ext))  return ImageFormat::Png;
-        if (StrStrI(L",bmp,dib,", ext))  return ImageFormat::Bmp;
-        if (StrStrI(L",gif,", ext))  return ImageFormat::Gif;
-        if (StrStrI(L",tiff,tif,", ext))  return ImageFormat::Tiff;
-        if (StrStrI(L",ico,icon,", ext))  return ImageFormat::Icon;
-        if (StrStrI(L",psd,", ext))  return ImageFormat::Psd;
-        if (StrStrI(L",tga,", ext))  return ImageFormat::Tga;
-        if (StrStrI(L",webp,", ext))  return ImageFormat::Webp;
-        if (StrStrI(ImageExtRaw(), ext))  return ImageFormat::Raw;
-        if (StrStrI(L",dds,", ext))  return ImageFormat::Dds;
-        if (StrStrI(L",dng,", ext))  return ImageFormat::Dng;
-        if (StrStrI(L",svg,", ext))  return ImageFormat::Svg;
-        if (StrStrI(L",heif,heic,", ext))  return ImageFormat::Heif;
-        if (StrStrI(L",avif,", ext))  return ImageFormat::Avif;
-        if (StrStrI(ImageExtFreeimage(), ext))  return ImageFormat::Freeimage;
-        return ImageFormat::Unknown;
+        using enum ImageFormat;
+        if (StrStrI(ImageExtJpeg(), ext))  return Jpeg;
+        if (StrStrI(L",png,", ext))  return Png;
+        if (StrStrI(L",bmp,dib,", ext))  return Bmp;
+        if (StrStrI(L",gif,", ext))  return Gif;
+        if (StrStrI(L",tiff,tif,", ext))  return Tiff;
+        if (StrStrI(L",ico,icon,", ext))  return Icon;
+        if (StrStrI(L",psd,", ext))  return Psd;
+        if (StrStrI(L",tga,", ext))  return Tga;
+        if (StrStrI(L",webp,", ext))  return Webp;
+        if (StrStrI(ImageExtRaw(), ext))  return Raw;
+        if (StrStrI(L",dds,", ext))  return Dds;
+        if (StrStrI(L",dng,", ext))  return Dng;
+        if (StrStrI(L",svg,", ext))  return Svg;
+        if (StrStrI(L",heif,heic,", ext))  return Heif;
+        if (StrStrI(L",avif,", ext))  return Avif;
+        if (StrStrI(ImageExtFreeimage(), ext))  return Freeimage;
+        return Unknown;
     }
 
 public:

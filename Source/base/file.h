@@ -55,7 +55,7 @@ public:
     /// Get file's size.
     static INT64 GetSize(PCWSTR filepath)
     {
-        WIN32_FILE_ATTRIBUTE_DATA   fd;
+        WIN32_FILE_ATTRIBUTE_DATA   fd = {};
         if (GetFileAttributesEx(filepath, GetFileExInfoStandard, &fd))
         {
             LARGE_INTEGER   n;
@@ -138,7 +138,7 @@ public:
     /// Read string key from ini file, return false if key doesn't exist.
     static bool INIRead(PCWSTR filepath, PCWSTR key, CString& s, PCWSTR section = L"app")
     {
-        WCHAR   b[256] = { 0 };
+        WCHAR   b[256] = {};
         DWORD   dwWrite = GetPrivateProfileString(section, key, L"\n", b, 256, filepath);
         if ((b[0] == '\n') && (b[1] == 0))
             return false;
@@ -159,7 +159,7 @@ public:
     /// Read int key from ini file, return false if key doesn't exist.
     static bool INIRead(PCWSTR filepath, PCWSTR key, INT64& n, PCWSTR section = L"app")
     {
-        WCHAR   b[32] = { 0 };
+        WCHAR   b[32] = {};
         GetPrivateProfileString(section, key, L"\n", b, 32, filepath);
         if ((b[0] == '\n') && (b[1] == 0))
             return false;

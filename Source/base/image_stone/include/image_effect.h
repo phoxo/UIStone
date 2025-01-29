@@ -53,7 +53,7 @@ public:
 private:
     static int GetLogicalProcessorsNumber()
     {
-        SYSTEM_INFO   v = { 0 };
+        SYSTEM_INFO   v = {};
         ::GetNativeSystemInfo(&v);
         return v.dwNumberOfProcessors;
     }

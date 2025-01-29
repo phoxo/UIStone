@@ -9,6 +9,7 @@ UISTONE_BEGIN
 */
 class FCTimerNotify
 {
+private:
     UINT_PTR   m_timer_id = 0;
 
 public:

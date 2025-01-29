@@ -56,7 +56,7 @@ private:
 
     static void CallSetScrollInfo(CWnd& wnd, int canvas_size, int wnd_size, int bar)
     {
-        SCROLLINFO   si = { 0, SIF_RANGE | SIF_PAGE };
+        SCROLLINFO   si = { .fMask = SIF_RANGE | SIF_PAGE };
         si.nMax = canvas_size - 1; // note -1
         si.nPage = wnd_size;
         wnd.SetScrollInfo(bar, &si, TRUE);

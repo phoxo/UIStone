@@ -34,17 +34,14 @@ public:
     /// draw image.
     static void Draw(HDC dc, CRect dest, HBITMAP img, const RECT* rect_on_image = nullptr)
     {
-        DIBSECTION   info = { 0 };
+        DIBSECTION   info = {};
         if (::GetObject(img, sizeof(info), &info))
         {
             CRect   rc = (rect_on_image ? *rect_on_image : CRect(0, 0, info.dsBm.bmWidth, info.dsBm.bmHeight));
 
             if ((info.dsBmih.biBitCount == 32) && info.dsBm.bmBits) // is a DIB bitmap
             {
-                BLENDFUNCTION   bf = { 0 };
-                bf.BlendOp = AC_SRC_OVER;
-                bf.SourceConstantAlpha = 255;
-                bf.AlphaFormat = AC_SRC_ALPHA;
+                BLENDFUNCTION   bf = { .SourceConstantAlpha = 255, .AlphaFormat = AC_SRC_ALPHA }; // BlendOp = AC_SRC_OVER
                 ::GdiAlphaBlend(dc, dest.left, dest.top, dest.Width(), dest.Height(), FCImageDrawDC(img), rc.left, rc.top, rc.Width(), rc.Height(), bf);
             }
             else

@@ -33,7 +33,7 @@ namespace imagestone_inner
     class FCEffectLUT : public FCImageEffect
     {
     private:
-        BYTE   m_LUT[256] = { 0 };
+        BYTE   m_LUT[256] = {};
     protected:
         /// 0 <= idx <= 0xFF
         virtual BYTE InitLUTtable(int idx) = 0;

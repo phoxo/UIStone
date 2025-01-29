@@ -78,7 +78,7 @@ private:
 
     static GUID GetMetadataFormat(IWICMetadataReader* reader)
     {
-        GUID   t = { 0 };
+        GUID   t = {};
         if (reader) { reader->GetMetadataFormat(&t); }
         return t;
     }

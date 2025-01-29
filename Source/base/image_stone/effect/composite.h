@@ -9,7 +9,7 @@ private:
     int   m_percent;
 
 public:
-    FCEffectCompositeStraight(const FCImage& top, POINT top_position, int top_percent = 100) : m_top(top)
+    FCEffectCompositeStraight(const FCImage& top, POINT top_position, int top_percent = 100) : m_top{ top }
     {
         m_top_position = top_position;
         m_percent = std::clamp(top_percent, 0, 100);

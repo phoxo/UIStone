@@ -36,6 +36,7 @@ public:
 private:
     bool DrawSvgDocument(ID2D1DeviceContext5* dc, SIZE output_size)
     {
+#ifdef _AFX
         ID2D1SvgDocumentPtr   svg;
         dc->CreateSvgDocument(m_stream, CD2DSizeF(output_size), &svg);
         if (svg)
@@ -45,6 +46,8 @@ private:
             dc->EndDraw();
             return true;
         }
+        return false;
+#endif // _AFX
         return false;
     }
 };

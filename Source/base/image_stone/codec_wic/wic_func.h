@@ -14,7 +14,7 @@ public:
 
     static GUID GetContainerFormat(IWICBitmapDecoder* decoder)
     {
-        GUID   t = { 0 };
+        GUID   t = {};
         if (decoder) { decoder->GetContainerFormat(&t); }
         return t;
     }
@@ -89,7 +89,7 @@ public:
 
     static WICPixelFormatGUID GetPixelFormat(IWICBitmapSource* bmp)
     {
-        WICPixelFormatGUID   t = { 0 };
+        WICPixelFormatGUID   t = {};
         if (bmp) { bmp->GetPixelFormat(&t); }
         return t;
     }

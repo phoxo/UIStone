@@ -21,7 +21,7 @@ public:
 
     static CString FormatByteSize(LONGLONG bytes)
     {
-        TCHAR   buf[32] = { 0 };
+        TCHAR   buf[32] = {};
         ::StrFormatByteSize(bytes, buf, 32);
         return buf;
     }

@@ -47,13 +47,14 @@ public:
 
     void BlockWaitAndDiscardAllTask()
     {
-        InvalidateAllRunningTask();
+        InvalidateAllRunningTasks();
         _BlockWaitTaskFinish();
         m_running_task.clear();
         m_waiting_task.clear();
     }
 
     const auto& GetRunningTask() const { return m_running_task; }
+    const auto& GetWaitingTask() const { return m_waiting_task; }
 
     void AddAsyncTask(CAsyncTask* task, const AddTaskOption& option = AddTaskOption())
     {
@@ -67,12 +68,12 @@ public:
         }
     }
 
-    void ClearWaitingTask()
+    void ClearWaitingTasks()
     {
         m_waiting_task.clear();
     }
 
-    void InvalidateAllRunningTask() const
+    void InvalidateAllRunningTasks() const
     {
         for (auto& iter : m_running_task) { iter.second->m_is_valid = false; }
     }
@@ -80,7 +81,12 @@ public:
 protected:
     void PostDispatchTask()
     {
-        PostMessage(GetMessageWindow(), CAsyncTask::MSG_POST_DISPATCH_TASK, 0, 0);
+        ::PostMessage(GetMessageWindow(), CAsyncTask::MSG_POST_DISPATCH_TASK, 0, 0);
+    }
+
+    bool IsAllTasksCompleted() const
+    {
+        return m_running_task.empty() && m_waiting_task.empty();
     }
 
     virtual void OnBeforeExecuteTask(CAsyncTask* task) {}

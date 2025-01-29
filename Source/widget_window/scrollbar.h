@@ -53,15 +53,14 @@ public:
             case SB_LINEDOWN: pos += m_line; break;
         }
 
-        SCROLLINFO   si = { 0, SIF_POS };
-        si.nPos = pos;
+        SCROLLINFO   si = { .fMask = SIF_POS, .nPos = pos };
         m_host.SetScrollInfo(bar, &si, TRUE);
     }
 
 private:
     int CallGetScrollPos(int bar, int event) const
     {
-        SCROLLINFO   si = { 0 };
+        SCROLLINFO   si = {};
         m_host.GetScrollInfo(bar, &si);
         return ((event == SB_THUMBPOSITION) || (event == SB_THUMBTRACK)) ? si.nTrackPos : si.nPos;
     }

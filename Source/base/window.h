@@ -29,6 +29,20 @@ public:
         parent.ScreenToClient(rc);
         return rc;
     }
+
+    static void DDX_Text_NoTip(CDataExchange* pDX, int nIDC, int& t, int tDefault)
+    {
+        if (pDX->m_bSaveAndValidate)
+        {
+            CString   s;
+            pDX->m_pDlgWnd->GetDlgItemText(nIDC, s);
+            t = (s.GetLength() ? StrToInt(s) : tDefault);
+        }
+        else
+        {
+            DDX_Text(pDX, nIDC, t);
+        }
+    }
 #endif
 
     static void LimitWindowInScreen(CRect& rc)

@@ -29,7 +29,7 @@ struct CGdiplusSaveParam
 private:
     static GUID GetFormatGUID(ImageFormat img_type)
     {
-        GUID   fmt = { 0 };
+        GUID   fmt = {};
         switch (img_type)
         {
         case ImageFormat::Bmp: fmt = Gdiplus::ImageFormatBMP; break;
@@ -43,7 +43,7 @@ private:
 
     static CLSID GetEncoderClsid(ImageFormat img_type)
     {
-        CLSID   ret = { 0 };
+        CLSID   ret = {};
         UINT   num = 0, buf_size = 0;
         Gdiplus::GetImageEncodersSize(&num, &buf_size);
         if (num && buf_size)

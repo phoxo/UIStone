@@ -35,7 +35,7 @@ public:
 
     static CSize GetBitmapSize(HBITMAP bmp)
     {
-        BITMAP   bm = { 0 };
+        BITMAP   bm = {};
         ::GetObject(bmp, sizeof(bm), &bm);
         return CSize(bm.bmWidth, bm.bmHeight);
     }

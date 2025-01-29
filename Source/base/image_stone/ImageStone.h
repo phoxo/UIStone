@@ -61,7 +61,7 @@ public:
 
     static void Uninit()
     {
-        CWICFunc::g_factory = NULL;
+        CWICFunc::g_factory = nullptr;
         Gdiplus::GdiplusShutdown(m_token);
         if (SUCCEEDED(m_COM_result))
         {

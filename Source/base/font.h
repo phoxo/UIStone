@@ -11,7 +11,7 @@ private:
         HFONT   m_font = NULL;
         CAutoFont()
         {
-            NONCLIENTMETRICS   nm = { 0 };
+            NONCLIENTMETRICS   nm = {};
             nm.cbSize = sizeof(nm);
             SystemParametersInfo(SPI_GETNONCLIENTMETRICS, nm.cbSize, &nm, 0);
 #ifdef _AFX
@@ -37,7 +37,7 @@ public:
     /// Get face name of default font.
     static CString GetDefaultFontFaceName()
     {
-        LOGFONT   lf = { 0 };
+        LOGFONT   lf = {};
         ::GetObject(GetDefaultFont(), sizeof(lf), &lf);
         return lf.lfFaceName;
     }

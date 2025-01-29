@@ -39,9 +39,7 @@ private:
         if (!PathFileExists(m_filepath))
             return NULL;
 
-        DROPFILES   dp_files = { 0 };
-        dp_files.pFiles = sizeof(DROPFILES);
-        dp_files.fWide = TRUE;
+        DROPFILES   dp_files = { .pFiles = sizeof(DROPFILES), .fWide = TRUE };
 
         int   path_bytes = m_filepath.GetLength() * 2 + 2;
         auto   mem = GlobalAlloc(GMEM_ZEROINIT | GMEM_MOVEABLE, sizeof(DROPFILES) + path_bytes + 2); // double 0

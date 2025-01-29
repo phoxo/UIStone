@@ -28,7 +28,7 @@ public:
         {
             if (!m_track)
             {
-                TRACKMOUSEEVENT   t = { 0 };
+                TRACKMOUSEEVENT   t = {};
                 t.cbSize = sizeof(t);
                 t.hwndTrack = hWnd;
                 t.dwFlags = TME_LEAVE;

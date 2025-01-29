@@ -28,7 +28,7 @@ public:
     // (en.ini,English) , (pt.ini,Portugu¨ºs)
     static void FindAllLanguage(std::map<CString, CString>& language_list)
     {
-        WIN32_FIND_DATA   fd = { 0 };
+        WIN32_FIND_DATA   fd = {};
         HANDLE   h = ::FindFirstFile(LANGUAGE_FOLDER() + L"*.ini", &fd);
         if (h == INVALID_HANDLE_VALUE)
             return;
@@ -55,7 +55,7 @@ public:
 
     static CString GetSystemLanguageID()
     {
-        WCHAR   name[LOCALE_NAME_MAX_LENGTH] = { 0 };
+        WCHAR   name[LOCALE_NAME_MAX_LENGTH] = {};
         ::GetSystemDefaultLocaleName(name, LOCALE_NAME_MAX_LENGTH);
 
         if ((StrStrI(name, L"zh-CN") == name) ||

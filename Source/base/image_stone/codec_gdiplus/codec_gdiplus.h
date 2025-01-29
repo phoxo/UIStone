@@ -12,7 +12,7 @@ public:
         UINT   bpp = Gdiplus::GetPixelFormatSize(desired_format);
         if (img.Create(src.GetWidth(), src.GetHeight(), bpp, attr))
         {
-            Gdiplus::BitmapData   bd = { 0 };
+            Gdiplus::BitmapData   bd{};
             bd.Width = img.Width();
             bd.Height = img.Height();
             bd.Stride = img.GetStride();
@@ -28,9 +28,7 @@ public:
 
     static bool SaveFile(PCWSTR filepath, const FCImage& img, int jpeg_quality = 0, int dpi = 0)
     {
-        CImagePropertyGdiplus   prop;
-        prop.m_save_jpeg_quality = jpeg_quality;
-        prop.m_dpi = dpi;
+        CImagePropertyGdiplus   prop{ .m_save_jpeg_quality = jpeg_quality, .m_dpi = dpi };
         return SaveFile(filepath, img, prop);
     }
 
