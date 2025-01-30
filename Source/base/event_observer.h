@@ -1,6 +1,4 @@
 #pragma once
-#include <list>
-UISTONE_BEGIN
 
 //-------------------------------------------------------------------------------------
 class ObservedEvent
@@ -20,7 +18,7 @@ public:
 class IEventObserverBase
 {
 private:
-    static inline std::list<IEventObserverBase*>   g_list;
+    static inline std::vector<IEventObserverBase*>   g_list;
 
 public:
     IEventObserverBase()
@@ -30,7 +28,7 @@ public:
 
     virtual ~IEventObserverBase()
     {
-        g_list.remove(this);
+        std::erase(g_list, this);
     }
 
     static void FireEvent(int event_type, int event_param = 0)
@@ -51,5 +49,3 @@ public:
 protected:
     virtual void OnObserveEvent(ObservedEvent& event) = 0;
 };
-
-UISTONE_END

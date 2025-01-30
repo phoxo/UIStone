@@ -1,8 +1,6 @@
 #pragma once
 #include <optional>
 
-UISTONE_BEGIN
-
 class AutoRestoreHDC
 {
 private:
@@ -23,5 +21,3 @@ public:
         ::RestoreDC(m_dc, -1);
     }
 };
-
-UISTONE_END

@@ -4,7 +4,6 @@
 #include "widget_item_text.h"
 #include "widget_item_image.h"
 #include "scrollbar.h"
-UISTONE_BEGIN
 
 class CWidgetWindow : public CWnd,
                       public FCTrackMouseHover
@@ -14,7 +13,7 @@ private:
     std::unique_ptr<CWidgetLayout>   m_layout;
     std::deque<std::unique_ptr<CWidgetItem>>   m_child_widget;
     CFont   m_font;
-    imsprivate::Scrollbar   m_scrollbar;
+    internal::Scrollbar   m_scrollbar;
     CWidgetItem   * m_highlight = nullptr; // 拖拽消息循环中，可能被别的事件激活Reload，item已经被删除了
 
 public:
@@ -231,7 +230,7 @@ inline void CWidgetWindow::OnMsgPaint()
     CBitmap   bmp;
     if (bmp.CreateCompatibleBitmap(&paint_dc, update_rect.Width(), update_rect.Height()))
     {
-        FCImageDrawDC   auto_bmp_selected(bmp); // 析构自动选出
+        BitmapHDC   auto_bmp_selected(bmp); // 析构自动选出
         CDC   * mem_dc = CDC::FromHandle(auto_bmp_selected);
         SelectObject(*mem_dc, m_font.m_hObject ? m_font.m_hObject : FCFontManager::GetDefaultFont());
 
@@ -393,5 +392,3 @@ inline LRESULT CWidgetWindow::WindowProc(UINT msg, WPARAM wParam, LPARAM lParam)
     }
     return __super::WindowProc(msg, wParam, lParam);
 }
-
-UISTONE_END

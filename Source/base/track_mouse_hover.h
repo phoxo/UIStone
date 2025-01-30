@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 /// Monitor mouse enter/leave window.
 class FCTrackMouseHover
@@ -50,5 +49,3 @@ public:
         }
     }
 };
-
-UISTONE_END

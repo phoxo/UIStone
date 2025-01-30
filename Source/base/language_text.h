@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 class CLanguageText
 {
@@ -97,5 +96,3 @@ private:
 
     static CString GetLanguageFile(PCWSTR filename) { return LANGUAGE_FOLDER() + filename; }
 };
-
-UISTONE_END

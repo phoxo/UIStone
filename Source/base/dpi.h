@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 class CDPICalculator
 {
@@ -35,5 +34,3 @@ public:
         return v * g_current_dpi() / v_designed_for_dpi;
     }
 };
-
-UISTONE_END

@@ -1,7 +1,7 @@
 #pragma once
 #include "widget_item.h"
-UISTONE_BEGIN
-typedef  std::unique_ptr<CWidgetItem>  CWidgetItemPtr;
+
+using CWidgetItemPtr = std::unique_ptr<CWidgetItem>;
 
 class CWidgetLayout
 {
@@ -91,5 +91,3 @@ private:
         }
     }
 };
-
-UISTONE_END

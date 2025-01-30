@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 class CWidgetItemText : public CWidgetItem
 {
@@ -28,5 +27,3 @@ protected:
         SelectObject(dc, old_font);
     }
 };
-
-UISTONE_END

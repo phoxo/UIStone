@@ -1,12 +1,9 @@
 #pragma once
 
-// ImageStone library
-#include "image_stone/ImageStone.h"
+using phoxo::ImageHandler;
+using phoxo::BitmapHDC;
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
-
-#define UISTONE_BEGIN  namespace uistone {
-#define UISTONE_END        }
 
 //-------------------------------------------------------------------------------------
 /// Auto init COM.

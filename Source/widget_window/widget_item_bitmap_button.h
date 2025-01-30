@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 class CWidgetItemBitmapButton : public CWidgetItem
 {
@@ -18,11 +17,11 @@ public:
 protected:
     virtual void OnDrawWidget(CDC& dc)
     {
-        CSize   sz = FCImageDrawDC::GetBitmapSize(m_img);
+        CSize   sz = phoxo::Utils::GetBitmapSize(m_img);
         CRect   src(0, 0, sz.cx / 3, sz.cy);
         src.OffsetRect(QueryImageIndex() * src.Width(), 0);
         CRect   dest(CPoint(), src.Size());
-        FCImageHandle::Draw(dc, dest, m_img, src);
+        ImageHandler::Draw(dc, dest, m_img, src);
     }
 
 private:
@@ -37,12 +36,10 @@ private:
 
     void SizeToBitmap()
     {
-        CSize   sz = FCImageDrawDC::GetBitmapSize(m_img);
+        CSize   sz = phoxo::Utils::GetBitmapSize(m_img);
         CRect   rc = GetRectOnCanvas();
         rc.right = rc.left + (sz.cx / 3);
         rc.bottom = rc.top + sz.cy;
         SetRectOnCanvas(rc);
     }
 };
-
-UISTONE_END

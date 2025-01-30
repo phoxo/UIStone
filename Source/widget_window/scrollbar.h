@@ -1,6 +1,6 @@
 #pragma once
 
-_IMSTONE_PRIVATE_BEGIN
+_PHOXO_INTERNAL_BEGIN
 
 class Scrollbar
 {
@@ -66,4 +66,4 @@ private:
     }
 };
 
-_IMSTONE_PRIVATE_END
+_PHOXO_NAMESPACE_END

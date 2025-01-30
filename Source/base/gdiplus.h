@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 template<class T>
 struct GdipRectT : public T
@@ -9,6 +8,4 @@ struct GdipRectT : public T
     }
 };
 
-typedef  GdipRectT<Gdiplus::Rect>  GdipRect;
-
-UISTONE_END
+using GdipRect = GdipRectT<Gdiplus::Rect>;

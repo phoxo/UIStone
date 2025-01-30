@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 class FCMessageWindow
 {
@@ -61,5 +60,3 @@ private:
         return ::DefWindowProc(hWnd, msg, wParam, lParam);
     }
 };
-
-UISTONE_END

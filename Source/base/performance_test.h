@@ -1,7 +1,6 @@
 #pragma once
 #include <timeapi.h>
 #pragma comment (lib, "Winmm.lib")
-UISTONE_BEGIN
 
 class FCPerformanceTest
 {
@@ -40,5 +39,3 @@ public:
         ::OutputDebugString(s);
     }
 };
-
-UISTONE_END

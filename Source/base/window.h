@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 /// Window helper.
 class FCWnd
@@ -60,5 +59,3 @@ public:
         rc.OffsetRect(delta);
     }
 };
-
-UISTONE_END

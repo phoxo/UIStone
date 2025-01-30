@@ -2,7 +2,6 @@
 #include <atlpath.h>
 #include <Shlobj.h>
 #pragma comment(lib, "Shell32.lib")
-UISTONE_BEGIN
 
 /// File helper.
 class FCFile
@@ -171,5 +170,3 @@ public:
     }
     //@}
 };
-
-UISTONE_END

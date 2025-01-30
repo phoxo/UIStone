@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 class CWidgetItem
 {
@@ -62,5 +61,3 @@ private:
     void SetInnerStatus(int remove, int add) { m_inner_status = ((m_inner_status & ~remove) | add); }
     friend class CWidgetWindow;
 };
-
-UISTONE_END

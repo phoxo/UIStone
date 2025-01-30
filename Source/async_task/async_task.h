@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 class CAsyncTask
 {
@@ -35,7 +34,7 @@ public:
         }
     }
 
-    // 有的时候可能要排队很久，等轮到执行的时候再检查一下
+    // 有的时候可能要排队很久，等轮到执行的时候再检查一下，可能这时候都不需要执行任务了
     virtual bool CheckValidBeforeExecute()
     {
         return m_is_valid;
@@ -66,5 +65,3 @@ private:
 
     friend class CAsyncTaskQueue;
 };
-
-UISTONE_END

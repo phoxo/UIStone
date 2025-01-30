@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 // images arranged horizontally one by one
 class CSequenceImage
@@ -37,7 +36,7 @@ public:
         return m_dest_each;
     }
 
-    void Load(FCImage& output, REFWICPixelFormatGUID output_format)
+    void Load(phoxo::Image& output, REFWICPixelFormatGUID output_format)
     {
         CSize   image_size = CWICFunc::GetBitmapSize(m_original);
         if (!image_size.cy)
@@ -58,7 +57,7 @@ public:
         }
     }
 
-    static void LoadFile(PCWSTR filepath, FCImage& output, REFWICPixelFormatGUID output_format, int count = 0)
+    static void LoadFile(PCWSTR filepath, phoxo::Image& output, REFWICPixelFormatGUID output_format, int count = 0)
     {
         CSequenceImage   t(filepath, 2 * USER_DEFAULT_SCREEN_DPI, count);
         t.Load(output, output_format);
@@ -90,19 +89,17 @@ private:
         return CWICFunc::ScaleBitmap(rgn, m_dest_each);
     }
 
-    void MapRectWithDpi(FCImage& output, CRect& oldrect, CRect& newrect, REFWICPixelFormatGUID output_format)
+    void MapRectWithDpi(phoxo::Image& output, CRect& oldrect, CRect& newrect, REFWICPixelFormatGUID output_format)
     {
-        FCImage   t;
-        FCCodecWIC::Load(ScaleRegion(oldrect), t, output_format);
+        phoxo::Image   t;
+        phoxo::CodecWIC::Load(ScaleRegion(oldrect), t, output_format);
         if (!output)
         {
             output.Create(m_dest_each.cx * m_count, m_dest_each.cy * m_row, t.ColorBits(), t.GetAttribute());
         }
-        FCImageHandle::Cover(output, t, newrect.TopLeft());
+        ImageHandler::Cover(output, t, newrect.TopLeft());
 
         oldrect.OffsetRect(oldrect.Width(), 0);
         newrect.OffsetRect(newrect.Width(), 0);
     }
 };
-
-UISTONE_END

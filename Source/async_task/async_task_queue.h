@@ -1,8 +1,6 @@
 #pragma once
 #include "async_task.h"
 
-UISTONE_BEGIN
-
 class CAsyncTaskQueue : public FCMessageWindow
 {
 private:
@@ -75,7 +73,7 @@ public:
 
     void InvalidateAllRunningTasks() const
     {
-        for (auto& iter : m_running_task) { iter.second->m_is_valid = false; }
+        for (auto& [_, task] : m_running_task) { task->m_is_valid = false; }
     }
 
 protected:
@@ -101,9 +99,9 @@ private:
         if (m_running_task.size())
         {
             DestroyMessageWindow(); // 任务线程里user可能会用AgentSendMessage发消息
-            for (auto& iter : m_running_task)
+            for (auto& [_, task] : m_running_task)
             {
-                iter.second->WaitWorkFinish();
+                task->WaitWorkFinish();
             }
             CreateMessageWindow(m_queue_wnd_name);
         }
@@ -179,5 +177,3 @@ inline LRESULT CAsyncTaskQueue::MessageWindowProc(UINT msg, WPARAM wParam, LPARA
     }
     return __super::MessageWindowProc(msg, wParam, lParam);
 }
-
-UISTONE_END

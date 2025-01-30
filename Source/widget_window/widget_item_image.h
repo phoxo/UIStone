@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 class CWidgetItemImage : public CWidgetItem
 {
@@ -19,16 +18,14 @@ protected:
     virtual void OnDrawWidget(CDC& dc)
     {
         assert(m_img);
-        FCImageHandle::Draw(dc, GetItemClientRect(), m_img);
+        ImageHandler::Draw(dc, GetItemClientRect(), m_img);
     }
 
     void SizeToBitmap()
     {
-        CSize   sz = FCImageDrawDC::GetBitmapSize(m_img);
+        CSize   sz = phoxo::Utils::GetBitmapSize(m_img);
         CRect   rc = GetRectOnCanvas();
         rc.BottomRight() = rc.TopLeft() + sz;
         SetRectOnCanvas(rc);
     }
 };
-
-UISTONE_END

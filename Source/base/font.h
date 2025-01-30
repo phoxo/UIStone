@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 /// Font helper.
 class FCFontManager
@@ -63,5 +62,3 @@ private:
         return v;
     }
 };
-
-UISTONE_END

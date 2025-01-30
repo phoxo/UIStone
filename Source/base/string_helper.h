@@ -1,6 +1,5 @@
 #pragma once
 #include <deque>
-UISTONE_BEGIN
 
 class CStringHelper
 {
@@ -46,5 +45,3 @@ public:
         return -1;
     }
 };
-
-UISTONE_END

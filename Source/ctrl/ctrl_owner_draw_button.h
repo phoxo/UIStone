@@ -1,5 +1,4 @@
 #pragma once
-UISTONE_BEGIN
 
 class COwnerDrawButton : public CButton,
                          public FCTrackMouseHover
@@ -80,7 +79,7 @@ private:
         CBitmap   bmp;
         bmp.Attach(CreateCompatibleBitmap(lpDIS->hDC, rc.Width(), rc.Height()));
         {
-            FCImageDrawDC   auto_bmp_selected(bmp);
+            BitmapHDC   auto_bmp_selected(bmp);
             auto   mem_dc = CDC::FromHandle(auto_bmp_selected);
             SelectObject(*mem_dc, FCFontManager::GetDefaultFont());
             OnDrawButton(*mem_dc, rc);
@@ -88,5 +87,3 @@ private:
         }
     }
 };
-
-UISTONE_END
