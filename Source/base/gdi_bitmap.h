@@ -1,13 +1,13 @@
 #pragma once
 
 // DIB or DDB, 如果是32位色，必须Premultiplied alpha
-class CGDIBitmap
+class GDIBitmap
 {
 private:
     HBITMAP   m_bmp = nullptr;
 
 public:
-    ~CGDIBitmap()
+    ~GDIBitmap()
     {
         Delete();
     }
@@ -36,7 +36,7 @@ public:
 
     static HBITMAP CreateDDB(const phoxo::Image& img, HBRUSH fill_background)
     {
-        CGDIBitmap   ddb;
+        GDIBitmap   ddb;
         ddb.CreateDDBFromDIB(img, fill_background);
         return ddb.Detach();
     }

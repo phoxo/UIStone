@@ -6,7 +6,7 @@
 #include "scrollbar.h"
 
 class CWidgetWindow : public CWnd,
-                      public FCTrackMouseHover
+                      public ITrackMouseHover
 {
 private:
     CToolTipCtrl   m_tip_ctrl;
@@ -114,7 +114,7 @@ inline CWidgetItem* CWidgetWindow::FindWidgetByID(int id) const
 
 inline CWidgetItem* CWidgetWindow::GetWidgetByIndex(int index) const
 {
-    bool   ok = ((index >= 0) && (index < (int)m_child_widget.size())); ASSERT(ok);
+    bool   ok = FCHelper::IsValidIndex(m_child_widget, index); ASSERT(ok);
     return ok ? m_child_widget[index].get() : nullptr;
 }
 
@@ -136,7 +136,7 @@ inline void CWidgetWindow::DeleteWidgetByID(int id)
 
 inline void CWidgetWindow::DeleteWidgetByIndex(int index)
 {
-    if ((index >= 0) && (index < (int)m_child_widget.size()))
+    if (FCHelper::IsValidIndex(m_child_widget, index))
     {
         m_child_widget.erase(m_child_widget.begin() + index);
     }
@@ -232,7 +232,7 @@ inline void CWidgetWindow::OnMsgPaint()
     {
         BitmapHDC   auto_bmp_selected(bmp); // 析构自动选出
         CDC   * mem_dc = CDC::FromHandle(auto_bmp_selected);
-        SelectObject(*mem_dc, m_font.m_hObject ? m_font.m_hObject : FCFontManager::GetDefaultFont());
+        SelectObject(*mem_dc, m_font.m_hObject ? m_font.m_hObject : FontManager::GetDefaultFont());
 
         mem_dc->SetViewportOrg(-update_rect.TopLeft()); // 原点移到窗口左上角
         DrawWidgetWindowBack(*mem_dc, update_rect);
@@ -354,7 +354,7 @@ inline void CWidgetWindow::OnHighlightMouseMove(CPoint pt_on_window)
 
 inline LRESULT CWidgetWindow::WindowProc(UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    FCTrackMouseHover::FilterMouseMessage(m_hWnd, msg);
+    ITrackMouseHover::FilterMouseMessage(m_hWnd, msg);
     switch (msg)
     {
     case WM_SIZE:

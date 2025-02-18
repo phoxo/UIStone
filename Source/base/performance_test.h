@@ -2,19 +2,19 @@
 #include <timeapi.h>
 #pragma comment (lib, "Winmm.lib")
 
-class FCPerformanceTest
+class PerformanceTest
 {
 private:
     DWORD   m_start;
 
 public:
-    FCPerformanceTest()
+    PerformanceTest()
     {
         timeBeginPeriod(1);
         Restart();
     }
 
-    ~FCPerformanceTest()
+    ~PerformanceTest()
     {
         timeEndPeriod(1);
     }

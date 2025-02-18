@@ -16,6 +16,7 @@ public:
 };
 //-------------------------------------------------------------------------------------
 // headers
+#include "helper.h"
 #include "dc.h"
 #include "gdiplus.h"
 #include "dpi.h"
@@ -26,7 +27,7 @@ public:
 #include "timer.h"
 #include "track_mouse_hover.h"
 #include "language_text.h"
-#include "language_section_loader.h"
+#include "language_text_group.h"
 #include "font.h"
 #include "event_observer.h"
 #include "sequence_image.h"

@@ -1,25 +1,25 @@
 #pragma once
 
 // images arranged horizontally one by one
-class CSequenceImage
+class SequenceImage
 {
 private:
     IWICBitmapPtr   m_original;
-    int   m_count = 0; // 横向排列，如果为零表示每个大小一样
+    int   m_count = 0; // 横向排列，如果为零表示每个大小一样的正方形
     int   m_row = 1;
     CSize   m_src_item;
     CSize   m_dest_each;
     int   m_image_designed_for_dpi;
 
 public:
-    CSequenceImage(PCWSTR filepath, int image_designed_for_dpi = 2 * USER_DEFAULT_SCREEN_DPI, int count = 0)
+    SequenceImage(PCWSTR filepath, int image_designed_for_dpi = 2 * USER_DEFAULT_SCREEN_DPI, int count = 0)
     {
         m_original = CWICFunc::LoadPlainImage(filepath, WICNormal32bpp);
         m_count = count;
         m_image_designed_for_dpi = image_designed_for_dpi;
     }
 
-    CSequenceImage(IStream* sp, int image_designed_for_dpi = 2 * USER_DEFAULT_SCREEN_DPI, int count = 0)
+    SequenceImage(IStream* sp, int image_designed_for_dpi = 2 * USER_DEFAULT_SCREEN_DPI, int count = 0)
     {
         m_original = CWICFunc::LoadPlainImage(sp, WICNormal32bpp);
         m_count = count;
@@ -59,7 +59,7 @@ public:
 
     static void LoadFile(PCWSTR filepath, phoxo::Image& output, REFWICPixelFormatGUID output_format, int count = 0)
     {
-        CSequenceImage   t(filepath, 2 * USER_DEFAULT_SCREEN_DPI, count);
+        SequenceImage   t(filepath, 2 * USER_DEFAULT_SCREEN_DPI, count);
         t.Load(output, output_format);
     }
 
@@ -77,8 +77,8 @@ private:
             m_count = original_size.cx / m_src_item.cx;
         }
 
-        m_dest_each.cx = CDPICalculator::Cast(m_src_item.cx, m_image_designed_for_dpi);
-        m_dest_each.cy = CDPICalculator::Cast(m_src_item.cy, m_image_designed_for_dpi);
+        m_dest_each.cx = DPICalculator::Cast(m_src_item.cx, m_image_designed_for_dpi);
+        m_dest_each.cy = DPICalculator::Cast(m_src_item.cy, m_image_designed_for_dpi);
     }
 
     // get rect of original scale to new image

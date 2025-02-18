@@ -1,7 +1,7 @@
 #pragma once
 
 /// Font helper.
-class FCFontManager
+class FontManager
 {
 private:
     class CAutoFont
@@ -10,8 +10,7 @@ private:
         HFONT   m_font = NULL;
         CAutoFont()
         {
-            NONCLIENTMETRICS   nm = {};
-            nm.cbSize = sizeof(nm);
+            NONCLIENTMETRICS   nm = { sizeof(NONCLIENTMETRICS) };
             SystemParametersInfo(SPI_GETNONCLIENTMETRICS, nm.cbSize, &nm, 0);
 #ifdef _AFX
             CFont   tmp;

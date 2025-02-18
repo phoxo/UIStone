@@ -1,52 +1,47 @@
 #pragma once
+#include "language_ini.h"
 
-class CLanguageText
+class LanguageText
 {
 public:
     static CString Get(PCWSTR section, PCWSTR key)
     {
-        CString   s;
-        FCFile::INIRead(GetLanguageFile(CURRENT_NAME()), key, s, section);
-        return s;
+        return GetIniReader().Get(section, key);
     }
 
     static CString Get(PCWSTR section, int key)
     {
-        CString   s;
-        s.Format(L"%d", key);
-        return Get(section, s);
-    }
-
-    static CString GetLanguageName(PCWSTR filename)
-    {
-        CString   s;
-        FCFile::INIRead(GetLanguageFile(filename), L"LANGUAGE", s);
-        return s;
+        return Get(section, std::to_wstring(key).c_str());
     }
 
     // (en.ini,English) , (pt.ini,Portugu¨ºs)
     static void FindAllLanguage(std::map<CString, CString>& language_list)
     {
         WIN32_FIND_DATA   fd = {};
-        HANDLE   h = ::FindFirstFile(LANGUAGE_FOLDER() + L"*.ini", &fd);
-        if (h == INVALID_HANDLE_VALUE)
-            return;
-        do
+        HANDLE   h = ::FindFirstFile(LanguageFolder() + L"*.ini", &fd);
+        if (h != INVALID_HANDLE_VALUE)
         {
-            CString   name = GetLanguageName(fd.cFileName);
-            if (!name.IsEmpty())
+            do
             {
-                language_list[fd.cFileName] = name;
-            }
-        } while (::FindNextFile(h, &fd));
-        ::FindClose(h);
+                CString   name;
+                FCFile::INIRead(LanguageFolder() + fd.cFileName, L"LANGUAGE", name);
+                if (!name.IsEmpty())
+                {
+                    language_list[fd.cFileName] = name;
+                }
+            } while (::FindNextFile(h, &fd));
+            ::FindClose(h);
+        }
     }
 
-    static CString GetCurrentLanguageID() { return CURRENT_NAME(); }
+    static CString GetCurrentLanguageID()
+    {
+        return CURRENT_NAME();
+    }
 
     static void SetCurrentLanguageID(PCWSTR filename)
     {
-        if (StrStrI(filename, L".ini") && PathFileExists(GetLanguageFile(filename)))
+        if (StrStrI(filename, L".ini") && PathFileExists(LanguageFolder() + filename))
         {
             wcscpy_s(CURRENT_NAME(), MAX_LANGUAGE_NAME, filename);
         }
@@ -54,38 +49,40 @@ public:
 
     static CString GetSystemLanguageID()
     {
-        WCHAR   name[LOCALE_NAME_MAX_LENGTH] = {};
-        ::GetSystemDefaultLocaleName(name, LOCALE_NAME_MAX_LENGTH);
+        WCHAR   buf[LOCALE_NAME_MAX_LENGTH] = {};
+        ::GetSystemDefaultLocaleName(buf, LOCALE_NAME_MAX_LENGTH);
+        CharLower(buf);
 
-        if ((StrStrI(name, L"zh-CN") == name) ||
-            (StrStrI(name, L"zh-SG") == name) ||
-            (StrCmpI(name, L"zh-Hans") == 0) ||
-            (StrCmpI(name, L"zh") == 0))
+        std::wstring_view   name(buf);
+        if (name.starts_with(L"zh-cn") ||
+            name.starts_with(L"zh-sg") ||
+            (name == L"zh-hans") ||
+            (name == L"zh"))
             return L"cn_simp.ini";
 
-        if (StrStrI(name, L"zh") == name)  return L"cn_trad.ini";
+        if (name.starts_with(L"zh"))  return L"cn_trad.ini";
 
-        if (StrStrI(name, L"fr-") == name)  return L"fr.ini";
-        if (StrStrI(name, L"de-") == name)  return L"de.ini";
-        if (StrStrI(name, L"es-") == name)  return L"es.ini";
-        if (StrStrI(name, L"pt-") == name)  return L"pt.ini";
-        if (StrStrI(name, L"ru") == name)  return L"ru.ini";
-        if (StrStrI(name, L"ar") == name)  return L"ar.ini";
-        if (StrStrI(name, L"it") == name)  return L"it.ini";
-        if (StrStrI(name, L"ja") == name)  return L"ja.ini";
-        if (StrStrI(name, L"ko") == name)  return L"ko.ini";
-        if (StrStrI(name, L"vi") == name)  return L"vi.ini";
-        if (StrStrI(name, L"uk") == name)  return L"uk.ini";
+        if (name.starts_with(L"fr-"))  return L"fr.ini";
+        if (name.starts_with(L"de-"))  return L"de.ini";
+        if (name.starts_with(L"es-"))  return L"es.ini";
+        if (name.starts_with(L"pt-"))  return L"pt.ini";
+        if (name.starts_with(L"ru"))  return L"ru.ini";
+        if (name.starts_with(L"ar"))  return L"ar.ini";
+        if (name.starts_with(L"it"))  return L"it.ini";
+        if (name.starts_with(L"ja"))  return L"ja.ini";
+        if (name.starts_with(L"ko"))  return L"ko.ini";
+        if (name.starts_with(L"vi"))  return L"vi.ini";
+        if (name.starts_with(L"uk"))  return L"uk.ini";
         return L"en.ini";
     }
 
-    static CString& LANGUAGE_FOLDER()
+private:
+    static auto& GetIniReader()
     {
-        static CString   dir = FCFile::GetModuleFolder((HMODULE)&__ImageBase) + L"language\\";
-        return dir;
+        static internal::LanguageIniReader   s(LanguageFolder() + CURRENT_NAME());
+        return s;
     }
 
-private:
     enum { MAX_LANGUAGE_NAME = 32 };
 
     static WCHAR* CURRENT_NAME()
@@ -94,5 +91,9 @@ private:
         return buf;
     }
 
-    static CString GetLanguageFile(PCWSTR filename) { return LANGUAGE_FOLDER() + filename; }
+    static CString& LanguageFolder()
+    {
+        static CString   dir = FCFile::GetModuleFolder((HMODULE)&__ImageBase) + L"language\\";
+        return dir;
+    }
 };

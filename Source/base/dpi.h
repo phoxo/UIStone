@@ -1,6 +1,6 @@
 #pragma once
 
-class CDPICalculator
+class DPICalculator
 {
 private:
     static int AcquireDpi()
@@ -12,7 +12,7 @@ private:
     }
 
 public:
-    static int& g_current_dpi()
+    static const int& g_current_dpi()
     {
         static int   s = AcquireDpi();
         return s;

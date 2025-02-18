@@ -1,13 +1,13 @@
 #pragma once
 
 /// Monitor mouse enter/leave window.
-class FCTrackMouseHover
+class ITrackMouseHover
 {
 private:
     BOOL   m_track = false;
 
 public:
-    virtual ~FCTrackMouseHover() {}
+    virtual ~ITrackMouseHover() {}
 
     /// Is mouse pointer is staying on window now.
     BOOL IsMouseHovering() const { return m_track; }

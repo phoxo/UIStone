@@ -1,7 +1,7 @@
 #pragma once
 
 class COwnerDrawButton : public CButton,
-                         public FCTrackMouseHover
+                         public ITrackMouseHover
 {
 private:
     LRESULT   m_check = BST_UNCHECKED;
@@ -58,7 +58,7 @@ private:
 
     virtual LRESULT WindowProc(UINT msg, WPARAM wParam, LPARAM lParam)
     {
-        FCTrackMouseHover::FilterMouseMessage(m_hWnd, msg);
+        ITrackMouseHover::FilterMouseMessage(m_hWnd, msg);
         switch (msg)
         {
         case WM_ERASEBKGND: return TRUE;
@@ -81,7 +81,7 @@ private:
         {
             BitmapHDC   auto_bmp_selected(bmp);
             auto   mem_dc = CDC::FromHandle(auto_bmp_selected);
-            SelectObject(*mem_dc, FCFontManager::GetDefaultFont());
+            SelectObject(*mem_dc, FontManager::GetDefaultFont());
             OnDrawButton(*mem_dc, rc);
             BitBlt(lpDIS->hDC, 0, 0, rc.Width(), rc.Height(), *mem_dc, 0, 0, SRCCOPY);
         }

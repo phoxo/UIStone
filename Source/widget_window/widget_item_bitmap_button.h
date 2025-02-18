@@ -3,7 +3,7 @@
 class CWidgetItemBitmapButton : public CWidgetItem
 {
 private:
-    CGDIBitmap   m_img;
+    GDIBitmap   m_img;
 
 public:
     using CWidgetItem::CWidgetItem;

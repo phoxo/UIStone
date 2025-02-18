@@ -77,32 +77,20 @@ public:
     }
 
     /// Read file to memory.
-    static bool Read(PCWSTR filepath, std::vector<BYTE>& file_data)
+    static void Read(PCWSTR filepath, std::vector<BYTE>& out)
     {
-        file_data.clear();
-
-        bool     b = false;
         HANDLE   f = CreateFile(filepath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
         if (f != INVALID_HANDLE_VALUE)
         {
-            DWORD   len = ::GetFileSize(f, NULL);
-            if (len && (len != INVALID_FILE_SIZE))
+            DWORD   len = ::GetFileSize(f, NULL), read = 0;
+            if (len != INVALID_FILE_SIZE)
             {
-                file_data.reserve(len + 2);
-                file_data.resize(len);
-
-                DWORD   dwRead = 0;
-                ::ReadFile(f, file_data.data(), len, &dwRead, NULL);
-                b = (dwRead == len);
-            }
-            else
-            {
-                b = true;
+                out.reserve(len + 2); //·½±ã×ª»»ÎªWCHAR*
+                out.resize(len);
+                ::ReadFile(f, out.data(), len, &read, NULL);
             }
             CloseHandle(f);
         }
-        assert(b);
-        return b;
     }
 
     /// Write buffer to file, if file already exist, it will be delete before write.
@@ -132,41 +120,23 @@ public:
         return t.m_strPath;
     }
 
-    /// @name Read/Write INI file.
-    //@{
-    /// Read string key from ini file, return false if key doesn't exist.
-    static bool INIRead(PCWSTR filepath, PCWSTR key, CString& s, PCWSTR section = L"app")
+    /// Read a string value from INI.
+    static void INIRead(PCWSTR filepath, PCWSTR key, CString& s, PCWSTR section = L"app")
     {
         WCHAR   b[256] = {};
-        DWORD   dwWrite = GetPrivateProfileString(section, key, L"\n", b, 256, filepath);
-        if ((b[0] == '\n') && (b[1] == 0))
-            return false;
+        DWORD   read = GetPrivateProfileString(section, key, NULL, b, 256, filepath);
+        if (!read)
+            return;
 
-        if (dwWrite > (256 - 4))
+        if (read > (256 - 4))
         {
-            std::vector<WCHAR>   buf(2048, 0);
-            GetPrivateProfileString(section, key, L"\n", buf.data(), (DWORD)buf.size(), filepath);
+            std::vector<WCHAR>   buf(2048);
+            GetPrivateProfileString(section, key, NULL, buf.data(), (DWORD)buf.size(), filepath);
             s = buf.data();
         }
         else
         {
             s = b;
         }
-        return true;
     }
-
-    /// Read int key from ini file, return false if key doesn't exist.
-    static bool INIRead(PCWSTR filepath, PCWSTR key, INT64& n, PCWSTR section = L"app")
-    {
-        WCHAR   b[32] = {};
-        GetPrivateProfileString(section, key, L"\n", b, 32, filepath);
-        if ((b[0] == '\n') && (b[1] == 0))
-            return false;
-        if (b[0] == 0)
-            return false;
-
-        n = _ttoi64(b);
-        return true;
-    }
-    //@}
 };

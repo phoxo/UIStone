@@ -3,13 +3,13 @@
 
 /// Timer notify.
 // ** 因为有static inline变量，禁止全局/静态类继承
-class FCTimerNotify
+class ITimerNotify
 {
 private:
     UINT_PTR   m_timer_id = 0;
 
 public:
-    virtual ~FCTimerNotify()
+    virtual ~ITimerNotify()
     {
         EndTimer();
     }
@@ -42,7 +42,7 @@ protected:
     virtual void OnHandleTimer() = 0;
 
 private:
-    static inline std::map<UINT_PTR, FCTimerNotify*>   g_timer_list;
+    static inline std::map<UINT_PTR, ITimerNotify*>   g_timer_list;
 
     static VOID CALLBACK uistone_TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
     {
