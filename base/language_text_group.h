@@ -10,7 +10,7 @@ public:
     LanguageTextGroup(PCWSTR section, PCWSTR key = L"t")
     {
         CString   txt = LanguageText::Get(section, key); // key == "t" means total, read all text, then split
-        CStringHelper::SplitTextByToken(txt, m_text_list, L"|");
+        FCString::SplitTextByToken(txt, m_text_list, L"|");
     }
 
     const CString& operator[](int idx) const

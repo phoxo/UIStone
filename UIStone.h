@@ -12,7 +12,10 @@
 */
 #pragma once
 
-#include "Source/base/global.h"
-#include "Source/ctrl/ctrl_owner_draw_button.h"
-#include "Source/widget_window/widget_window.h"
-#include "Source/async_task/async_task_queue.h"
+#include "base/global.h"
+#include "async_task/async_task_queue.h"
+
+#ifdef _AFX
+#include "ctrl/ctrl_owner_draw_button.h"
+#include "widget_window/widget_window.h"
+#endif

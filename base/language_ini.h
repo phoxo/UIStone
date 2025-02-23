@@ -29,12 +29,9 @@ struct IniSection : public std::map<std::wstring_view, std::wstring_view>
 
     CString Get(PCWSTR key) const
     {
-        auto   iter = find(key);
-        if (iter != end())
-        {
-            auto   var = iter->second;
-            return CString(var.data(), (int)var.size());
-        }
+        auto   it = find(key);
+        if (it != end())
+            return FCString::Make(it->second);
         return L"";
     }
 };
@@ -81,7 +78,7 @@ private:
 
     std::wstring_view FindSection(const CString& name) const
     {
-        if (auto ptr = StrStrI((WCHAR*)m_buf.data(), '[' + name + ']'); ptr)
+        if (auto ptr = StrStrI((PCWSTR)m_buf.data(), '[' + name + ']'); ptr)
         {
             std::wstring_view   sv(ptr);
             PopCurrentLine(sv);
@@ -90,9 +87,9 @@ private:
         return {};
     }
 
-    static void TrimLeadingCRLF(auto& sv)
+    static void TrimLeadingChars(auto& sv, PCWSTR token)
     {
-        while (sv.size() && (sv[0] == '\r' || sv[0] == '\n'))
+        while (sv.size() && wcschr(token, sv[0]))
         {
             sv.remove_prefix(1);
         }
@@ -111,7 +108,7 @@ private:
         {
             line = sv.substr(0, pos);
             sv.remove_prefix(pos + 1);
-            TrimLeadingCRLF(sv); // 可能有一些空行
+            TrimLeadingChars(sv, L"\r\n"); // 可能有一些空行
         }
         return line;
     }

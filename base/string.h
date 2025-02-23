@@ -1,36 +1,20 @@
 #pragma once
-#include <deque>
 
-class CStringHelper
+class FCString
 {
 public:
     static void SplitTextByToken(const CString& txt, std::deque<CString>& split_txt, PCWSTR tokens)
     {
         split_txt.clear();
 
-        int   find_pos = 0;
+        int   curr = 0;
         for (;;)
         {
-            CString   tmp = txt.Tokenize(tokens, find_pos);
-            if (find_pos == -1)
+            CString   tmp = txt.Tokenize(tokens, curr);
+            if (curr == -1)
                 break;
             split_txt.push_back(tmp);
         }
-    }
-
-    static CString FormatByteSize(LONGLONG bytes)
-    {
-        TCHAR   buf[32] = {};
-        ::StrFormatByteSize(bytes, buf, 32);
-        return buf;
-    }
-
-    template<class T>
-    static CString FormatOneValue(PCWSTR fmt, const T& v)
-    {
-        CString   k;
-        k.Format(fmt, v);
-        return k;
     }
 
     static int FindNoCase(const std::deque<CString>& vec, PCWSTR search_str)
@@ -43,5 +27,10 @@ public:
             idx++;
         }
         return -1;
+    }
+
+    static CString Make(const std::wstring_view& sv)
+    {
+        return CString(sv.data(), (int)sv.size());
     }
 };

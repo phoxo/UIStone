@@ -44,7 +44,7 @@ public:
 
     static void RemoveReadOnlyAttribute(LPCTSTR filepath)
     {
-        auto   prop = GetFileAttributes(filepath);
+        DWORD   prop = GetFileAttributes(filepath);
         if ((prop != INVALID_FILE_ATTRIBUTES) && (prop & FILE_ATTRIBUTE_READONLY))
         {
             SetFileAttributes(filepath, prop & ~FILE_ATTRIBUTE_READONLY);
@@ -94,21 +94,16 @@ public:
     }
 
     /// Write buffer to file, if file already exist, it will be delete before write.
-    static bool Write(PCWSTR filepath, const void* p, int write_bytes)
+    static void Write(PCWSTR filepath, LPCVOID p, DWORD write_bytes)
     {
         RemoveReadOnlyAttribute(filepath);
 
-        bool     b = false;
         HANDLE   f = CreateFile(filepath, GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-        if (f != INVALID_HANDLE_VALUE)
+        if (DWORD res = 0; f != INVALID_HANDLE_VALUE)
         {
-            DWORD   nWrite = 0;
-            ::WriteFile(f, p, write_bytes, &nWrite, NULL);
-            b = ((int)nWrite == write_bytes);
+            ::WriteFile(f, p, write_bytes, &res, NULL); assert(res == write_bytes);
             CloseHandle(f);
         }
-        assert(b);
-        return b;
     }
 
     static CString GetTempFolder()

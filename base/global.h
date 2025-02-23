@@ -7,12 +7,12 @@ extern "C" IMAGE_DOS_HEADER __ImageBase;
 
 //-------------------------------------------------------------------------------------
 /// Auto init COM.
-class FCAutoInitializeCOM
+class AutoComInitializer
 {
 private:
     HRESULT   m_hr = ::CoInitialize(0);
 public:
-    ~FCAutoInitializeCOM() { if (SUCCEEDED(m_hr)) { ::CoUninitialize(); } }
+    ~AutoComInitializer() { if (SUCCEEDED(m_hr)) { ::CoUninitialize(); } }
 };
 //-------------------------------------------------------------------------------------
 // headers
@@ -22,7 +22,7 @@ public:
 #include "dpi.h"
 #include "file.h"
 #include "performance_test.h"
-#include "string_helper.h"
+#include "string.h"
 #include "message_window.h"
 #include "timer.h"
 #include "track_mouse_hover.h"

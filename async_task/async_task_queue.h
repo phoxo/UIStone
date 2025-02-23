@@ -109,7 +109,7 @@ private:
 
     static VOID CALLBACK execute_task_proc(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_WORK Work)
     {
-        FCAutoInitializeCOM   auto_init_COM;
+        AutoComInitializer   auto_init_COM;
         auto   task = (CAsyncTask*)Context;
         task->Execute();
 
@@ -117,7 +117,7 @@ private:
         {
             if (::IsWindow(task->m_host_queue))
             {
-                ASSERT(false); // message queue is full ?
+                assert(false); // message queue is full ?
                 SendNotifyMessage(task->m_host_queue, CAsyncTask::MSG_ASYNC_TASK_FINISH, task->m_id, 0);
             }
         }
@@ -140,7 +140,7 @@ inline void CAsyncTaskQueue::DispatchTask()
             task->m_host_queue = GetMessageWindow();
             OnBeforeExecuteTask(task.get());
             m_running_task[task->m_id] = task;
-            task->m_work = CreateThreadpoolWork(execute_task_proc, task.get(), NULL); ASSERT(task->m_work);
+            task->m_work = CreateThreadpoolWork(execute_task_proc, task.get(), NULL); assert(task->m_work);
             SubmitThreadpoolWork(task->m_work);
         }
     }
@@ -160,7 +160,7 @@ inline LRESULT CAsyncTaskQueue::MessageWindowProc(UINT msg, WPARAM wParam, LPARA
             task->OnTaskFinish();
             OnExecuteTaskFinish(task.get());
         }
-        else { ASSERT(false); }
+        else { assert(false); }
 
         DispatchTask();
         return 0;
