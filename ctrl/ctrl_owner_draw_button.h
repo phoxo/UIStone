@@ -29,34 +29,31 @@ protected:
     }
 
 private:
-    virtual void OnMouse_EnterWnd()
+    void OnMouse_EnterWnd() override
     {
         if (m_tip.IsEmpty() || m_tip_ctrl)
             return;
 
-        CRect   rc;
-        GetClientRect(rc);
-
         OnCreateTooltipCtrl(m_tip_ctrl);
         m_tip_ctrl.Activate(TRUE);
-        m_tip_ctrl.AddTool(this, m_tip, rc, 100);
+        m_tip_ctrl.AddTool(this, m_tip, FCWnd::GetClientRect(m_hWnd), 100);
     }
 
-    virtual void PreSubclassWindow()
+    void PreSubclassWindow() override
     {
         // don't create tooltip window in PreSubclassWindow
         __super::PreSubclassWindow();
         ModifyStyle(0, BS_OWNERDRAW);
     }
 
-    virtual BOOL PreTranslateMessage(MSG* pMsg)
+    BOOL PreTranslateMessage(MSG* pMsg) override
     {
         if (m_tip_ctrl)
             m_tip_ctrl.RelayEvent(pMsg);
         return __super::PreTranslateMessage(pMsg);
     }
 
-    virtual LRESULT WindowProc(UINT msg, WPARAM wParam, LPARAM lParam)
+    LRESULT WindowProc(UINT msg, WPARAM wParam, LPARAM lParam) override
     {
         ITrackMouseHover::FilterMouseMessage(m_hWnd, msg);
         switch (msg)
@@ -71,7 +68,7 @@ private:
         return __super::WindowProc(msg, wParam, lParam);
     }
 
-    virtual void DrawItem(LPDRAWITEMSTRUCT lpDIS)
+    void DrawItem(LPDRAWITEMSTRUCT lpDIS) override
     {
         CRect   rc;
         GetClientRect(rc);

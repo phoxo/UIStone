@@ -23,4 +23,14 @@ public:
         }
         return *obj;
     }
+
+    static void RegGetString(PCWSTR key, PCWSTR value, CString& out)
+    {
+        DWORD   bytes = 0;
+        if (RegGetValue(HKEY_CURRENT_USER, key, value, RRF_RT_REG_SZ, NULL, NULL, &bytes) == ERROR_SUCCESS)
+        {
+            RegGetValue(HKEY_CURRENT_USER, key, value, RRF_RT_REG_SZ, NULL, out.GetBuffer(bytes / 2 + 2), &bytes);
+            out.ReleaseBuffer();
+        }
+    }
 };

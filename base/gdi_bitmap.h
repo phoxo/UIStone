@@ -29,7 +29,7 @@ public:
             assert(src.IsPremultiplied());
         }
 
-        CreateDDB(CSize(src.Width(), src.Height()));
+        CreateDDB(src.GetSize());
         BitmapHDC   dest_dc(m_bmp, fill_background);
         ImageHandler::Draw(dest_dc, CPoint(0, 0), src);
     }

@@ -40,7 +40,7 @@ public:
 
     static void FireEvent(ObservedEvent& event)
     {
-        for (auto iter : g_list)
+        for (auto& iter : g_list)
         {
             iter->OnObserveEvent(event);
         }

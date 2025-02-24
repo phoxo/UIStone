@@ -6,7 +6,6 @@ class CAsyncTaskQueue : public FCMessageWindow
 private:
     std::map<int, std::shared_ptr<CAsyncTask>>   m_running_task;
     std::deque<std::shared_ptr<CAsyncTask>>   m_waiting_task;
-    const CString   m_queue_wnd_name;
     int   m_max_thread_count = 1; // default maximum 1 thread
 
 public:
@@ -17,7 +16,7 @@ public:
     };
 
 public:
-    CAsyncTaskQueue(PCWSTR window_name = L"") : m_queue_wnd_name(window_name)
+    CAsyncTaskQueue(PCWSTR window_name = L"")
     {
         CreateMessageWindow(window_name);
     }
@@ -32,14 +31,14 @@ public:
         m_max_thread_count = max_count;
     }
 
-    // !!! dangerous call, check carefully to prevent deadlock
+    // !!! dangerous call, ensure proper checks to prevent deadlock
     void BlockWaitAllRunningTaskFinish()
     {
         _BlockWaitTaskFinish();
         // 模拟发消息，只能保证收到任务完成回调，任务线程里如果有AgentSendMessage可能会丢失，确定这些丢失不影响程序正常运行
-        for (auto& iter : m_running_task)
+        for (auto& [taskid, _] : m_running_task)
         {
-            PostMessage(GetMessageWindow(), CAsyncTask::MSG_ASYNC_TASK_FINISH, iter.first, 0);
+            PostMessage(GetMessageWindow(), CAsyncTask::MSG_ASYNC_TASK_FINISH, taskid, 0);
         }
     }
 
@@ -51,8 +50,8 @@ public:
         m_waiting_task.clear();
     }
 
-    const auto& GetRunningTask() const { return m_running_task; }
-    const auto& GetWaitingTask() const { return m_waiting_task; }
+    auto& GetRunningTask() const { return m_running_task; }
+    auto& GetWaitingTask() const { return m_waiting_task; }
 
     void AddAsyncTask(CAsyncTask* task, const AddTaskOption& option = AddTaskOption())
     {
@@ -77,7 +76,7 @@ public:
     }
 
 protected:
-    void PostDispatchTask()
+    void PostDispatchTask() const
     {
         ::PostMessage(GetMessageWindow(), CAsyncTask::MSG_POST_DISPATCH_TASK, 0, 0);
     }
@@ -89,7 +88,7 @@ protected:
 
     virtual void OnBeforeExecuteTask(CAsyncTask* task) {}
     virtual void OnExecuteTaskFinish(CAsyncTask* task) {}
-    virtual LRESULT MessageWindowProc(UINT msg, WPARAM wParam, LPARAM lParam);
+    LRESULT MessageWindowProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 private:
     void DispatchTask();
@@ -98,16 +97,19 @@ private:
     {
         if (m_running_task.size())
         {
+            WCHAR   name[128] = {};
+            ::GetWindowText(GetMessageWindow(), name, 128);
+
             DestroyMessageWindow(); // 任务线程里user可能会用AgentSendMessage发消息
             for (auto& [_, task] : m_running_task)
             {
                 task->WaitWorkFinish();
             }
-            CreateMessageWindow(m_queue_wnd_name);
+            CreateMessageWindow(name);
         }
     }
 
-    static VOID CALLBACK execute_task_proc(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_WORK Work)
+    static VOID CALLBACK execute_task_proc(PTP_CALLBACK_INSTANCE, PVOID Context, PTP_WORK)
     {
         AutoComInitializer   auto_init_COM;
         auto   task = (CAsyncTask*)Context;

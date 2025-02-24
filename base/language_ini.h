@@ -51,7 +51,7 @@ public:
 
     CString Get(PCWSTR section, PCWSTR key)
     {
-        return GetSection(section).Get(key);
+        return (section && key) ? GetSection(section).Get(key) : CString();
     }
 
 private:

@@ -27,10 +27,7 @@ public:
         {
             if (!m_track)
             {
-                TRACKMOUSEEVENT   t = {};
-                t.cbSize = sizeof(t);
-                t.hwndTrack = hWnd;
-                t.dwFlags = TME_LEAVE;
+                TRACKMOUSEEVENT   t = { sizeof(TRACKMOUSEEVENT), TME_LEAVE, hWnd };
                 m_track = TrackMouseEvent(&t); assert(m_track);
                 OnMouse_EnterWnd();
                 ::InvalidateRect(hWnd, NULL, TRUE);

@@ -15,7 +15,7 @@ public:
     }
 
 protected:
-    virtual void OnDrawWidget(CDC& dc)
+    void OnDrawWidget(CDC& dc) override
     {
         assert(m_img);
         ImageHandler::Draw(dc, GetItemClientRect(), m_img);

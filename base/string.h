@@ -3,7 +3,8 @@
 class FCString
 {
 public:
-    static void SplitTextByToken(const CString& txt, std::deque<CString>& split_txt, PCWSTR tokens)
+    template<class T>
+    static void SplitTextByToken(const CString& txt, T& split_txt, PCWSTR tokens)
     {
         split_txt.clear();
 
@@ -32,5 +33,12 @@ public:
     static CString Make(const std::wstring_view& sv)
     {
         return CString(sv.data(), (int)sv.size());
+    }
+
+    static CString From(int n)
+    {
+        CString   t;
+        t.Format(L"%d", n);
+        return t;
     }
 };

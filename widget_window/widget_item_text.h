@@ -17,7 +17,7 @@ public:
     void SetColor(COLORREF cr) { m_color = cr; }
 
 protected:
-    virtual void OnDrawWidget(CDC& dc)
+    void OnDrawWidget(CDC& dc) override
     {
         if (!m_font) { ASSERT(false); return; }
 

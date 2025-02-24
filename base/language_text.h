@@ -11,7 +11,7 @@ public:
 
     static CString Get(PCWSTR section, int key)
     {
-        return Get(section, std::to_wstring(key).c_str());
+        return Get(section, FCString::From(key));
     }
 
     // (en.ini,English) , (pt.ini,Portugu¨ºs)
@@ -34,7 +34,7 @@ public:
         }
     }
 
-    static CString GetCurrentLanguageID()
+    static PCWSTR GetCurrentLanguageID()
     {
         return CURRENT_NAME();
     }

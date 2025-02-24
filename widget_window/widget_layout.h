@@ -79,7 +79,7 @@ public:
     CVerticalWidgetLayout(int item_height, CRect margin = CRect()) : m_item_height(item_height), m_margin(margin) { }
 
 private:
-    virtual void LayoutWidget(CWnd& wnd, std::deque<CWidgetItemPtr>& child_items)
+    void LayoutWidget(CWnd& wnd, std::deque<CWidgetItemPtr>& child_items) override
     {
         CRect   rc = FCWnd::GetClientRect(wnd);
         rc.DeflateRect(m_margin);

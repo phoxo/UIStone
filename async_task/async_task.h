@@ -15,8 +15,8 @@ private:
     PTP_WORK   m_work = NULL;
 
 public:
-    const int   m_id = GenerateID();
-    BOOL   m_is_valid = true;
+    const int   m_id = s_curr_id++;
+    bool   m_is_valid = true;
 
     enum { MSG_USER_BEGIN = (WM_APP + 100) };
 
@@ -40,11 +40,11 @@ public:
         return m_is_valid;
     }
 
-    // 1) callback in a CHILD THREAD
+    // 1) callback executed from the thread pool
     // 2) 如果需要SendMessage通知主线程，use AgentSendMessage
     virtual void Execute() = 0;
 
-    // 1) callback in the MAIN THREAD
+    // 1) callback executed in the MAIN THREAD
     // 2) 如果task被父队列强制丢弃，不会收到此回调
     virtual void OnTaskFinish() {}
 
@@ -57,11 +57,7 @@ public:
     }
 
 private:
-    static int GenerateID()
-    {
-        static int   last_id = 1;
-        return last_id++;
-    }
+    static inline int   s_curr_id = 1;
 
     friend class CAsyncTaskQueue;
 };

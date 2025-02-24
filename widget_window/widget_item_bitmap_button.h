@@ -15,7 +15,7 @@ public:
     }
 
 protected:
-    virtual void OnDrawWidget(CDC& dc)
+    void OnDrawWidget(CDC& dc) override
     {
         CSize   sz = phoxo::Utils::GetBitmapSize(m_img);
         CRect   src(0, 0, sz.cx / 3, sz.cy);
