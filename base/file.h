@@ -42,7 +42,7 @@ public:
         return dir;
     }
 
-    static void RemoveReadOnlyAttribute(LPCTSTR filepath)
+    static void RemoveReadOnlyAttribute(PCWSTR filepath)
     {
         DWORD   prop = GetFileAttributes(filepath);
         if ((prop != INVALID_FILE_ATTRIBUTES) && (prop & FILE_ATTRIBUTE_READONLY))
@@ -79,7 +79,7 @@ public:
     /// Read file to memory.
     static void Read(PCWSTR filepath, std::vector<BYTE>& out)
     {
-        HANDLE   f = CreateFile(filepath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+        HANDLE   f = CreateFile(filepath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
         if (f != INVALID_HANDLE_VALUE)
         {
             DWORD   len = ::GetFileSize(f, NULL), read = 0;
@@ -96,12 +96,12 @@ public:
     /// Write buffer to file, if file already exist, it will be delete before write.
     static void Write(PCWSTR filepath, LPCVOID p, DWORD write_bytes)
     {
-        RemoveReadOnlyAttribute(filepath);
+        SetFileAttributes(filepath, FILE_ATTRIBUTE_NORMAL);
 
         HANDLE   f = CreateFile(filepath, GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-        if (DWORD res = 0; f != INVALID_HANDLE_VALUE)
+        if (DWORD result = 0; f != INVALID_HANDLE_VALUE)
         {
-            ::WriteFile(f, p, write_bytes, &res, NULL); assert(res == write_bytes);
+            ::WriteFile(f, p, write_bytes, &result, NULL); assert(result == write_bytes);
             CloseHandle(f);
         }
     }
@@ -115,23 +115,43 @@ public:
         return t.m_strPath;
     }
 
+    /// ext: such as ".jpg"
+    static CString CreateTempFilename(const CString& ext)
+    {
+        CString   t = GetTempFolder();
+        t.AppendFormat(L"oxo%u_%d%s", GetTickCount(), rand(), ext);
+        return t;
+    }
+
     /// Read a string value from INI.
     static void INIRead(PCWSTR filepath, PCWSTR key, CString& s, PCWSTR section = L"app")
     {
         WCHAR   b[256] = {};
-        DWORD   read = GetPrivateProfileString(section, key, NULL, b, 256, filepath);
-        if (!read)
-            return;
-
-        if (read > (256 - 4))
+        if (DWORD read = GetPrivateProfileString(section, key, NULL, b, 256, filepath))
         {
-            std::vector<WCHAR>   buf(2048);
-            GetPrivateProfileString(section, key, NULL, buf.data(), (DWORD)buf.size(), filepath);
-            s = buf.data();
-        }
-        else
-        {
-            s = b;
+            if (read > (256 - 4))
+            {
+                std::vector<WCHAR>   buf(2048);
+                GetPrivateProfileString(section, key, NULL, buf.data(), (DWORD)buf.size(), filepath);
+                s = buf.data();
+            }
+            else
+            {
+                s = b;
+            }
         }
     }
+
+#ifdef _AFX
+    static void FindFolderFiles(const CString& folder, std::deque<CString>& collected)
+    {
+        CFileFind   fd;
+        BOOL   working = fd.FindFile(folder);
+        while (working)
+        {
+            working = fd.FindNextFile();
+            collected.push_back(fd.GetFileName());
+        }
+    }
+#endif
 };

@@ -12,7 +12,10 @@ public:
         DestroyMessageWindow();
     }
 
-    HWND GetMessageWindow() const { return m_wnd; }
+    HWND GetMessageWindow() const
+    {
+        return m_wnd;
+    }
 
     void CreateMessageWindow(PCWSTR window_name = NULL)
     {
@@ -20,7 +23,7 @@ public:
         DestroyMessageWindow();
 
         CString   clsname;
-        clsname.Format(L"uistone_msgwnd_%I64d", (INT64)&__ImageBase);
+        clsname.Format(L"phoxo_msgwnd_%I64X", (INT64)&__ImageBase);
 
         WNDCLASSEX   w = { sizeof(WNDCLASSEX) };
         w.hInstance = (HINSTANCE)&__ImageBase;
@@ -52,10 +55,9 @@ protected:
 private:
     static LRESULT CALLBACK message_handle_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
-        auto   p = (FCMessageWindow*)::GetWindowLongPtr(hWnd, GWLP_USERDATA);
-        if (p)
+        if (auto obj = (FCMessageWindow*)::GetWindowLongPtr(hWnd, GWLP_USERDATA))
         {
-            return p->MessageWindowProc(msg, wParam, lParam);
+            return obj->MessageWindowProc(msg, wParam, lParam);
         }
         return ::DefWindowProc(hWnd, msg, wParam, lParam);
     }

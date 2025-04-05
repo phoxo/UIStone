@@ -46,7 +46,7 @@ private:
 
     static VOID CALLBACK uistone_TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
     {
-        assert(g_timer_list.contains(idEvent)); // 碰到过KillTimer后又进来的，可能是messages already posted to the message queue.
+        // assert(g_timer_list.contains(idEvent)); // 碰到过KillTimer后又进来的，可能是messages already posted to the message queue.
 
         auto   iter = g_timer_list.find(idEvent);
         if (iter != g_timer_list.end())

@@ -9,7 +9,7 @@ private:
     CToolTipCtrl   m_tip_ctrl;
 
 public:
-    BOOL Create(CRect rc, CWnd* parent_wnd, UINT button_id, DWORD style = WS_VISIBLE)
+    BOOL Create(const CRect& rc, CWnd* parent_wnd, UINT button_id, DWORD style = WS_VISIBLE)
     {
         return CButton::Create(L"", WS_CHILD | BS_OWNERDRAW | style, rc, parent_wnd, button_id);
     }
@@ -72,7 +72,6 @@ private:
     {
         CRect   rc;
         GetClientRect(rc);
-
         CBitmap   bmp;
         bmp.Attach(CreateCompatibleBitmap(lpDIS->hDC, rc.Width(), rc.Height()));
         {

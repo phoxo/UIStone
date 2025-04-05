@@ -1,4 +1,6 @@
 #pragma once
+#include <stdexcept>
+#include <ranges>
 
 using phoxo::ImageHandler;
 using phoxo::BitmapHDC;
@@ -12,6 +14,7 @@ class AutoComInitializer
 private:
     HRESULT   m_hr = ::CoInitialize(0);
 public:
+    AutoComInitializer() { assert(SUCCEEDED(m_hr)); }
     ~AutoComInitializer() { if (SUCCEEDED(m_hr)) { ::CoUninitialize(); } }
 };
 //-------------------------------------------------------------------------------------
@@ -21,6 +24,7 @@ public:
 #include "gdiplus.h"
 #include "dpi.h"
 #include "file.h"
+#include "file_save_agent.h"
 #include "performance_test.h"
 #include "string.h"
 #include "message_window.h"

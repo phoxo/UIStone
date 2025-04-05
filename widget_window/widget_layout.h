@@ -29,7 +29,7 @@ protected:
 private:
     void SetScrollbarRange(CWnd& wnd, int canvas_size, int wnd_size, int bar)
     {
-        // 显示/隐藏滚动条ShowScrollBar里面会send WM_SIZE再一次layout，这里返回
+        // 显示/隐藏滚动条ShowScrollBar里面会send WM_SIZE再一次layout（其实不加保护也没问题，多一次设置info，两次参数一样）
         if (m_modifying_scrollbar_visible)
             return;
 

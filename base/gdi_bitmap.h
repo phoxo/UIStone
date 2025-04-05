@@ -30,7 +30,11 @@ public:
         }
 
         CreateDDB(src.GetSize());
-        BitmapHDC   dest_dc(m_bmp, fill_background);
+        BitmapHDC   dest_dc(m_bmp);
+        if (fill_background)
+        {
+            ::FillRect(dest_dc, CRect(CPoint(), src.GetSize()), fill_background);
+        }
         ImageHandler::Draw(dest_dc, CPoint(0, 0), src);
     }
 

@@ -51,11 +51,23 @@ public:
         CRect   tmp(rc.TopLeft(), work_rect.Size()); // rc大小限制在屏幕范围内
         rc.IntersectRect(CRect(rc), tmp);
 
-        CSize   delta(0, 0);
-        if (rc.left < 0)   delta.cx = -rc.left;
-        if (rc.right > work_rect.right)   delta.cx = (work_rect.right - rc.right);
-        if (rc.top < 0)   delta.cy = -rc.top;
-        if (rc.bottom > work_rect.bottom)   delta.cy = (work_rect.bottom - rc.bottom);
-        rc.OffsetRect(delta);
+        MoveRectInside(rc, work_rect.BottomRight());
+    }
+
+    static void MoveRectInside(CRect& rc, const CSize& limit)
+    {
+        int   dx = OffsetInRange(rc.left, rc.right, limit.cx);
+        int   dy = OffsetInRange(rc.top, rc.bottom, limit.cy);
+        rc.OffsetRect(dx, dy);
+    }
+
+private:
+    static int OffsetInRange(int low, int high, int limit)
+    {
+        if (low < 0)
+            return -low;
+        else if (high > limit)
+            return limit - high;
+        return 0;
     }
 };

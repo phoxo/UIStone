@@ -24,7 +24,7 @@ public:
         DestroyWindow();
     }
 
-    void Create(CRect rect_on_parent, CWnd* parent_wnd, UINT nID, DWORD wnd_style = WS_VISIBLE)
+    void Create(const CRect& rect_on_parent, CWnd* parent_wnd, UINT nID, DWORD wnd_style = WS_VISIBLE)
     {
         CWnd::Create(NULL, NULL, WS_CHILD | WS_TABSTOP | WS_CLIPCHILDREN | wnd_style, rect_on_parent, parent_wnd, nID);
     }
@@ -40,7 +40,7 @@ public:
     void DeleteWidgetByIndex(int index);
     CWidgetItem* ReleaseWidgetOwnership(int id);
     void LayoutWidget();
-    CWidgetItem* ClickHitTest(CPoint pt_on_window) const;
+    CWidgetItem* ClickHitTest(CPoint pt_on_window, bool scan_hidden = false) const;
     auto& GetAllWidgets() const { return m_child_widget; }
 
     CRect CanvasToWindow(const CRect& rect_on_canvas) const { return rect_on_canvas - m_scrollbar.GetPos(); }
@@ -62,13 +62,14 @@ protected:
     virtual LRESULT WindowProc(UINT msg, WPARAM wParam, LPARAM lParam);
 
 private:
-    void OnMsgPaint();
+    void OnMsgPaint(CDC& paint_dc, CRect update_rect);
     void OnMsgScroll(int bar, int event);
     void OnMsgMouseMove(CPoint pt_on_window);
     void OnHighlightMouseMove(CPoint pt_on_window);
     void OnHighlightEnd(CPoint pt_on_window);
     virtual void OnMouse_LeaveWnd() { OnMsgMouseMove(CPoint(-0xFFFF, -0xFFFF)); }
     int FindWidgetIndex(int id) const;
+    bool IsDrawOrderReversed() const { return m_child_widget.size() && m_child_widget.front()->IsDrawOrderReversed(); }
 
     struct AutoClearHighlight
     {
@@ -76,6 +77,22 @@ private:
         AutoClearHighlight(CWidgetItem*& p) : p_(p) {}
         ~AutoClearHighlight() { p_ = nullptr; }
     };
+
+    template <typename T>
+    void PaintAllWidgets(CDC& dc, const T& vec, const CRect& update_rect)
+    {
+        for (CSize sbpos = m_scrollbar.GetPos(); auto& iter : vec)
+        {
+            CRect   widget_rect = iter->GetRectOnCanvas() - sbpos; // convert to rect on window
+            if (iter->IsVisible() && CRect().IntersectRect(widget_rect, update_rect))
+            {
+                // for every item, the origin of DC is point (0,0)
+                CPoint   old = dc.OffsetViewportOrg(widget_rect.left, widget_rect.top);
+                iter->OnDrawWidget(dc);
+                dc.SetViewportOrg(old);
+            }
+        }
+    }
 };
 //-------------------------------------------------------------------------------------
 inline void CWidgetWindow::AddWidget(CWidgetItem* item_src, int add_index)
@@ -127,11 +144,7 @@ inline void CWidgetWindow::DeleteAllWidget()
 
 inline void CWidgetWindow::DeleteWidgetByID(int id)
 {
-    int   pos = FindWidgetIndex(id);
-    if (pos != -1)
-    {
-        m_child_widget.erase(m_child_widget.begin() + pos);
-    }
+    DeleteWidgetByIndex(FindWidgetIndex(id));
 }
 
 inline void CWidgetWindow::DeleteWidgetByIndex(int index)
@@ -144,11 +157,10 @@ inline void CWidgetWindow::DeleteWidgetByIndex(int index)
 
 inline CWidgetItem* CWidgetWindow::ReleaseWidgetOwnership(int id)
 {
-    int   pos = FindWidgetIndex(id);
-    if (pos != -1)
+    if (int pos = FindWidgetIndex(id); pos != -1)
     {
         auto   t = m_child_widget[pos].release();
-        m_child_widget.erase(m_child_widget.begin() + pos);
+        DeleteWidgetByIndex(pos);
         return t;
     }
     return nullptr;
@@ -163,15 +175,18 @@ inline void CWidgetWindow::LayoutWidget()
     Invalidate();
 }
 
-inline CWidgetItem* CWidgetWindow::ClickHitTest(CPoint pt_on_window) const
+inline CWidgetItem* CWidgetWindow::ClickHitTest(CPoint pt_on_window, bool scan_hidden) const
 {
     CPoint   pt = pt_on_window + m_scrollbar.GetPos();
     for (auto& iter : m_child_widget)
     {
-        if (iter->GetRectOnCanvas().PtInRect(pt) && iter->IsVisible() && iter->IsEnable())
-            return iter.get();
+        if (iter->GetRectOnCanvas().PtInRect(pt) && iter->IsEnable())
+        {
+            if (scan_hidden || iter->IsVisible())
+                return iter.get();
+        }
     }
-    return NULL;
+    return nullptr;
 }
 
 inline void CWidgetWindow::RegisterToolTip()
@@ -206,7 +221,7 @@ inline void CWidgetWindow::OnCreateTooltip(CToolTipCtrl& tip_ctrl)
 
 inline void CWidgetWindow::OnHighlightEnd(CPoint pt_on_window)
 {
-    CWidgetItem   * now_item = ClickHitTest(pt_on_window);
+    auto   now_item = ClickHitTest(pt_on_window);
     if (now_item && (now_item == m_highlight))
     {
         OnClickWidget(*now_item);
@@ -220,39 +235,24 @@ inline BOOL CWidgetWindow::PreTranslateMessage(MSG* pMsg)
     return __super::PreTranslateMessage(pMsg);
 }
 
-inline void CWidgetWindow::OnMsgPaint()
+inline void CWidgetWindow::OnMsgPaint(CDC& paint_dc, CRect update_rect)
 {
-    CPaintDC   paint_dc(this);
-    CRect   update_rect = paint_dc.m_ps.rcPaint;
-    if (update_rect.IsRectEmpty())
-        return;
-
     CBitmap   bmp;
     if (bmp.CreateCompatibleBitmap(&paint_dc, update_rect.Width(), update_rect.Height()))
     {
         BitmapHDC   auto_bmp_selected(bmp); // 析构自动选出
-        CDC   * mem_dc = CDC::FromHandle(auto_bmp_selected);
-        SelectObject(*mem_dc, m_font.m_hObject ? m_font.m_hObject : FontManager::GetDefaultFont());
+        CDC   & mem_dc = *CDC::FromHandle(auto_bmp_selected);
+        SelectObject(mem_dc, m_font.m_hObject ? m_font.m_hObject : FontManager::GetDefaultFont());
 
-        mem_dc->SetViewportOrg(-update_rect.TopLeft()); // 原点移到窗口左上角
-        DrawWidgetWindowBack(*mem_dc, update_rect);
+        mem_dc.SetViewportOrg(-update_rect.TopLeft()); // 原点移到窗口左上角
+        DrawWidgetWindowBack(mem_dc, update_rect);
 
-        CSize   sbpos = m_scrollbar.GetPos();
-        for (auto& iter : m_child_widget)
-        {
-            if (iter->IsVisible())
-            {
-                CRect   widget_rect = iter->GetRectOnCanvas() - sbpos; // convert to rect on window
-                if (CRect().IntersectRect(widget_rect, update_rect))
-                {
-                    // for every item, the origin of DC is point (0,0)
-                    CPoint   old_origin = mem_dc->OffsetViewportOrg(widget_rect.left, widget_rect.top);
-                    iter->OnDrawWidget(*mem_dc);
-                    mem_dc->SetViewportOrg(old_origin);
-                }
-            }
-        }
-        paint_dc.BitBlt(update_rect.left, update_rect.top, update_rect.Width(), update_rect.Height(), mem_dc, update_rect.left, update_rect.top, SRCCOPY);
+        if (IsDrawOrderReversed())
+            PaintAllWidgets(mem_dc, std::views::reverse(m_child_widget), update_rect);
+        else
+            PaintAllWidgets(mem_dc, std::views::all(m_child_widget), update_rect);
+
+        ::BitBlt(paint_dc, update_rect.left, update_rect.top, update_rect.Width(), update_rect.Height(), mem_dc, update_rect.left, update_rect.top, SRCCOPY);
     }
 }
 
@@ -281,7 +281,7 @@ inline void CWidgetWindow::OnMsgLButtonDown(CPoint pt_on_window)
     if (m_highlight) { m_highlight->SetHighlight(true); }
     for (;;)
     {
-        MSG   msg = { 0 };
+        MSG   msg = {};
         ::GetMessage(&msg, NULL, 0, 0);
         if (::GetCapture() != m_hWnd) // 很难复现，被别的弹窗夺走焦点
         {
@@ -312,9 +312,8 @@ capture_over:
 
 inline void CWidgetWindow::OnMsgMouseMove(CPoint pt_on_window)
 {
-    CPoint   pt_canvas = pt_on_window + m_scrollbar.GetPos();
     CWidgetItem   *last_hover = NULL, *now_hover = NULL;
-    for (auto& iter : m_child_widget)
+    for (CPoint pt_canvas = pt_on_window + m_scrollbar.GetPos(); auto& iter : m_child_widget)
     {
         if (iter->IsMouseHovering())
             last_hover = iter.get();
@@ -361,8 +360,7 @@ inline LRESULT CWidgetWindow::WindowProc(UINT msg, WPARAM wParam, LPARAM lParam)
         LayoutWidget();
         break;
 
-    case WM_ERASEBKGND:
-        return 1;
+    case WM_ERASEBKGND: return 1;
 
     case WM_LBUTTONDOWN:
         OnMsgLButtonDown(lParam);
@@ -377,7 +375,8 @@ inline LRESULT CWidgetWindow::WindowProc(UINT msg, WPARAM wParam, LPARAM lParam)
         return 0;
 
     case WM_PAINT:
-        OnMsgPaint();
+        if (CPaintDC dc(this); !IsRectEmpty(&dc.m_ps.rcPaint))
+            OnMsgPaint(dc, dc.m_ps.rcPaint);
         return 0;
 
     case WM_HSCROLL:

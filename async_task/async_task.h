@@ -18,11 +18,13 @@ public:
     const int   m_id = s_curr_id++;
     bool   m_is_valid = true;
 
-    enum { MSG_USER_BEGIN = (WM_APP + 100) };
-
 public:
     CAsyncTask() {}
-    virtual ~CAsyncTask() { assert(!m_work); }
+
+    virtual ~CAsyncTask()
+    {
+        assert(!m_work);
+    }
 
     void WaitWorkFinish()
     {
@@ -32,12 +34,6 @@ public:
             CloseThreadpoolWork(m_work);
             m_work = NULL;
         }
-    }
-
-    // 有的时候可能要排队很久，等轮到执行的时候再检查一下，可能这时候都不需要执行任务了
-    virtual bool CheckValidBeforeExecute()
-    {
-        return m_is_valid;
     }
 
     // 1) callback executed from the thread pool

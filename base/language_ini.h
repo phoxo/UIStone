@@ -2,6 +2,8 @@
 
 _PHOXO_INTERNAL_BEGIN
 
+using CStringRef = const CString&;
+
 enum class IniLineType
 {
     Section,
@@ -11,12 +13,19 @@ enum class IniLineType
 
 struct IniSection : public std::map<std::wstring_view, std::wstring_view>
 {
+    static bool IsSectionLine(const std::wstring_view& sv)
+    {
+        size_t   first = sv.find_first_not_of(L" \t");
+        size_t   end = sv.find_last_not_of(L" \t");
+        return (first != sv.npos) && (end != sv.npos) && (sv[first] == '[') && (sv[end] == ']');
+    }
+
     IniLineType ParseLine(const std::wstring_view& sv)
     {
         size_t   pos = sv.find('=');
         if (pos == sv.npos)
         {
-            if ((sv.find('[') != sv.npos) && (sv.find(']') != sv.npos))
+            if (IsSectionLine(sv))
                 return IniLineType::Section;
             return IniLineType::Skip;
         }
@@ -29,9 +38,11 @@ struct IniSection : public std::map<std::wstring_view, std::wstring_view>
 
     CString Get(PCWSTR key) const
     {
-        auto   it = find(key);
-        if (it != end())
-            return FCString::Make(it->second);
+        if (key)
+        {
+            if (auto it = find(key); it != end())
+                return FCString::Make(it->second);
+        }
         return L"";
     }
 };
@@ -49,13 +60,13 @@ public:
         m_buf.insert(m_buf.end(), 2, 0);
     }
 
-    CString Get(PCWSTR section, PCWSTR key)
+    CString Get(const CString& section, PCWSTR key)
     {
-        return (section && key) ? GetSection(section).Get(key) : CString();
+        return GetSection(section).Get(key);
     }
 
 private:
-    const IniSection& GetSection(PCWSTR name)
+    const IniSection& GetSection(CStringRef name)
     {
         if (auto it = m_sections.find(name); it != m_sections.end())
             return it->second;
@@ -65,7 +76,7 @@ private:
         return sec;
     }
 
-    void ParseSection(PCWSTR name, IniSection& section) const
+    void ParseSection(CStringRef name, IniSection& section) const
     {
         auto   curr = FindSection(name);
         while (!curr.empty())
@@ -76,9 +87,9 @@ private:
         }
     }
 
-    std::wstring_view FindSection(const CString& name) const
+    std::wstring_view FindSection(CStringRef name) const
     {
-        if (auto ptr = StrStrI((PCWSTR)m_buf.data(), '[' + name + ']'); ptr)
+        if (auto ptr = StrStrI((PCWSTR)m_buf.data(), '[' + name + ']'))
         {
             std::wstring_view   sv(ptr);
             PopCurrentLine(sv);

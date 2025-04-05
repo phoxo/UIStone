@@ -4,9 +4,9 @@ class FCString
 {
 public:
     template<class T>
-    static void SplitTextByToken(const CString& txt, T& split_txt, PCWSTR tokens)
+    static void SplitTextByToken(const CString& txt, T& output, PCWSTR tokens)
     {
-        split_txt.clear();
+        output.clear();
 
         int   curr = 0;
         for (;;)
@@ -14,16 +14,15 @@ public:
             CString   tmp = txt.Tokenize(tokens, curr);
             if (curr == -1)
                 break;
-            split_txt.push_back(tmp);
+            output.push_back(tmp);
         }
     }
 
-    static int FindNoCase(const std::deque<CString>& vec, PCWSTR search_str)
+    static int FindNoCase(const std::deque<CString>& vec, const CString& search_str)
     {
-        int   idx = 0;
-        for (auto& iter : vec)
+        for (int idx = 0; auto& iter : vec)
         {
-            if (StrCmpI(iter, search_str) == 0)
+            if (_wcsicmp(iter, search_str) == 0)
                 return idx;
             idx++;
         }
@@ -40,5 +39,12 @@ public:
         CString   t;
         t.Format(L"%d", n);
         return t;
+    }
+
+    static CString FormatByteSize(LONGLONG bytes)
+    {
+        WCHAR   buf[32] = {};
+        ::StrFormatByteSize(bytes, buf, 32);
+        return buf;
     }
 };

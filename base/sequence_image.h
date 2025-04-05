@@ -12,16 +12,13 @@ private:
     int   m_image_designed_for_dpi;
 
 public:
-    SequenceImage(PCWSTR filepath, int image_designed_for_dpi = 2 * USER_DEFAULT_SCREEN_DPI, int count = 0)
+    SequenceImage(PCWSTR filepath, int image_designed_for_dpi = 2 * USER_DEFAULT_SCREEN_DPI, int count = 0) : SequenceImage(WIC::CreateStreamFromFileNoLock(filepath), image_designed_for_dpi, count)
     {
-        m_original = CWICFunc::LoadPlainImage(filepath, WICNormal32bpp);
-        m_count = count;
-        m_image_designed_for_dpi = image_designed_for_dpi;
     }
 
     SequenceImage(IStream* sp, int image_designed_for_dpi = 2 * USER_DEFAULT_SCREEN_DPI, int count = 0)
     {
-        m_original = CWICFunc::LoadPlainImage(sp, WICNormal32bpp);
+        m_original = WIC::LoadPlainImageFromStream(sp, WICNormal32bpp);
         m_count = count;
         m_image_designed_for_dpi = image_designed_for_dpi;
     }
@@ -38,7 +35,7 @@ public:
 
     void Load(phoxo::Image& output, REFWICPixelFormatGUID output_format)
     {
-        CSize   image_size = CWICFunc::GetBitmapSize(m_original);
+        CSize   image_size = WIC::GetBitmapSize(m_original);
         if (!image_size.cy)
             return;
 
@@ -85,14 +82,13 @@ private:
     IWICBitmapSourcePtr ScaleRegion(CRect rc)
     {
         IWICBitmapPtr   rgn;
-        CWICFunc::g_factory->CreateBitmapFromSourceRect(m_original, rc.left, rc.top, rc.Width(), rc.Height(), &rgn);
-        return CWICFunc::ScaleBitmap(rgn, m_dest_each);
+        WIC::g_factory->CreateBitmapFromSourceRect(m_original, rc.left, rc.top, rc.Width(), rc.Height(), &rgn);
+        return WIC::ScaleBitmap(rgn, m_dest_each);
     }
 
     void MapRectWithDpi(phoxo::Image& output, CRect& oldrect, CRect& newrect, REFWICPixelFormatGUID output_format)
     {
-        phoxo::Image   t;
-        phoxo::CodecWIC::Load(ScaleRegion(oldrect), t, output_format);
+        auto   t = phoxo::ImageHandler::Make(ScaleRegion(oldrect), output_format);
         if (!output)
         {
             output.Create(m_dest_each.cx * m_count, m_dest_each.cy * m_row, t.ColorBits(), t.GetAttribute());

@@ -32,7 +32,7 @@ public:
         return (int)n;
     }
 
-    void DebugOut(PCWSTR prefix_txt = L"oxo -- elapse -- ")
+    void DebugOut(PCWSTR prefix_txt = L"oxo -- ")
     {
         CString   s;
         s.Format(L"%s%d\n", prefix_txt, GetElapseTime());
