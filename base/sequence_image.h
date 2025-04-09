@@ -33,31 +33,26 @@ public:
         return m_dest_each;
     }
 
-    void Load(phoxo::Image& output, REFWICPixelFormatGUID output_format)
+    phoxo::Image Load(REFWICPixelFormatGUID output_format)
     {
-        CSize   image_size = WIC::GetBitmapSize(m_original);
-        if (!image_size.cy)
-            return;
-
-        CalcInput(image_size);
-
-        CRect   oldrect(CPoint(), m_src_item);
-        CRect   newrect(CPoint(), m_dest_each);
-        for (int y = 0; y < m_row; y++)
+        phoxo::Image   output;
+        if (CSize raw_size = WIC::GetBitmapSize(m_original); raw_size.cy)
         {
-            for (int i = 0; i < m_count; i++)
-            {
-                MapRectWithDpi(output, oldrect, newrect, output_format);
-            }
-            oldrect.MoveToX(0); oldrect.OffsetRect(0, oldrect.Height());
-            newrect.MoveToX(0); newrect.OffsetRect(0, newrect.Height());
-        }
-    }
+            CalcInput(raw_size);
 
-    static void LoadFile(PCWSTR filepath, phoxo::Image& output, REFWICPixelFormatGUID output_format, int count = 0)
-    {
-        SequenceImage   t(filepath, 2 * USER_DEFAULT_SCREEN_DPI, count);
-        t.Load(output, output_format);
+            CRect   oldrect(CPoint(), m_src_item);
+            CRect   newrect(CPoint(), m_dest_each);
+            for (int y = 0; y < m_row; y++)
+            {
+                for (int i = 0; i < m_count; i++)
+                {
+                    MapRectWithDpi(output, oldrect, newrect, output_format);
+                }
+                oldrect.MoveToXY(0, oldrect.bottom);
+                newrect.MoveToXY(0, newrect.bottom);
+            }
+        }
+        return output;
     }
 
 private:
@@ -71,7 +66,7 @@ private:
         else
         {
             m_src_item.cx = m_src_item.cy; // 图片是正方形
-            m_count = original_size.cx / m_src_item.cx;
+            m_count = original_size.cx / m_src_item.cx; assert(original_size.cx % m_src_item.cx == 0);
         }
 
         m_dest_each.cx = DPICalculator::Cast(m_src_item.cx, m_image_designed_for_dpi);
@@ -83,7 +78,7 @@ private:
     {
         IWICBitmapPtr   rgn;
         WIC::g_factory->CreateBitmapFromSourceRect(m_original, rc.left, rc.top, rc.Width(), rc.Height(), &rgn);
-        return WIC::ScaleBitmap(rgn, m_dest_each);
+        return WIC::ScaleBitmap(rgn, m_dest_each, WICBitmapInterpolationModeHighQualityCubic);
     }
 
     void MapRectWithDpi(phoxo::Image& output, CRect& oldrect, CRect& newrect, REFWICPixelFormatGUID output_format)
@@ -95,7 +90,7 @@ private:
         }
         ImageHandler::Cover(output, t, newrect.TopLeft());
 
-        oldrect.OffsetRect(oldrect.Width(), 0);
-        newrect.OffsetRect(newrect.Width(), 0);
+        oldrect.MoveToX(oldrect.right);
+        newrect.MoveToX(newrect.right);
     }
 };

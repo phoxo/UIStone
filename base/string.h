@@ -18,6 +18,19 @@ public:
         }
     }
 
+    static std::deque<CString> SplitTextByToken(const CString& txt, PCWSTR tokens)
+    {
+        std::deque<CString>   vec;
+        for (int curr = 0;;)
+        {
+            CString   tmp = txt.Tokenize(tokens, curr);
+            if (curr == -1)
+                break;
+            vec.push_back(tmp);
+        }
+        return vec;
+    }
+
     static int FindNoCase(const std::deque<CString>& vec, const CString& search_str)
     {
         for (int idx = 0; auto& iter : vec)

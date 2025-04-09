@@ -34,6 +34,6 @@ public:
 #include "language_text_group.h"
 #include "font.h"
 #include "event_observer.h"
-#include "sequence_image.h"
+#include "sequence_3state_builder.h"
 #include "gdi_bitmap.h"
 #include "window.h"

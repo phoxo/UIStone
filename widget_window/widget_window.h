@@ -33,6 +33,7 @@ public:
     auto& GetFont() const { return m_font; }
 
     void AddWidget(CWidgetItem* item, int add_index = -1);
+    int FindWidgetIndex(int id) const;
     CWidgetItem* FindWidgetByID(int id) const;
     CWidgetItem* GetWidgetByIndex(int index) const;
     void DeleteAllWidget();
@@ -58,8 +59,8 @@ protected:
     virtual void OnClickWidget(CWidgetItem& widget) {}
     virtual void OnMsgLButtonDown(CPoint pt_on_window);
     virtual void OnMsgLButtonDoubleClick(CPoint pt_on_window) { OnMsgLButtonDown(pt_on_window); }
-    virtual BOOL PreTranslateMessage(MSG* pMsg);
-    virtual LRESULT WindowProc(UINT msg, WPARAM wParam, LPARAM lParam);
+    BOOL PreTranslateMessage(MSG* pMsg) override;
+    LRESULT WindowProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 private:
     void OnMsgPaint(CDC& paint_dc, CRect update_rect);
@@ -68,13 +69,11 @@ private:
     void OnHighlightMouseMove(CPoint pt_on_window);
     void OnHighlightEnd(CPoint pt_on_window);
     virtual void OnMouse_LeaveWnd() { OnMsgMouseMove(CPoint(-0xFFFF, -0xFFFF)); }
-    int FindWidgetIndex(int id) const;
     bool IsDrawOrderReversed() const { return m_child_widget.size() && m_child_widget.front()->IsDrawOrderReversed(); }
 
     struct AutoClearHighlight
     {
         CWidgetItem   *& p_;
-        AutoClearHighlight(CWidgetItem*& p) : p_(p) {}
         ~AutoClearHighlight() { p_ = nullptr; }
     };
 
@@ -268,7 +267,7 @@ inline void CWidgetWindow::OnMsgScroll(int bar, int event)
 
 inline void CWidgetWindow::OnMsgLButtonDown(CPoint pt_on_window)
 {
-    AutoClearHighlight   clear_highlight(m_highlight);
+    AutoClearHighlight   clear_highlight{ m_highlight };
     Invalidate();
     OnMsgMouseMove(pt_on_window);
     m_highlight = ClickHitTest(pt_on_window);

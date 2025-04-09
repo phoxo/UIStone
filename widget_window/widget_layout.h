@@ -12,18 +12,20 @@ public:
     virtual ~CWidgetLayout() {}
     virtual void LayoutWidget(CWnd& wnd, std::deque<CWidgetItemPtr>& child_items) = 0;
 
+    bool IsModifyingScrollbar() const { return m_modifying_scrollbar_visible; }
+
 protected:
     /// Set window's vertical scrollbar range.
     void SetVScrollRange(CWnd& wnd, int canvas_height)
     {
-        int   wnd_height = FCWnd::GetWindowRect(wnd).Height();
-        SetScrollbarRange(wnd, canvas_height, wnd_height, SB_VERT);
+        CRect   rc = FCWnd::GetWindowRect(wnd);
+        SetScrollbarRange(wnd, canvas_height, rc.Height(), SB_VERT);
     }
 
     void SetHScrollRange(CWnd& wnd, int canvas_width)
     {
-        int   wnd_width = FCWnd::GetWindowRect(wnd).Width();
-        SetScrollbarRange(wnd, canvas_width, wnd_width, SB_HORZ);
+        CRect   rc = FCWnd::GetWindowRect(wnd);
+        SetScrollbarRange(wnd, canvas_width, rc.Width(), SB_HORZ);
     }
 
 private:
@@ -65,7 +67,7 @@ private:
     static bool IsAnyScrollbarVisible(const CWnd& wnd)
     {
         DWORD   t = wnd.GetStyle(); // 目前的窗口都只显示一个H or V滚动条
-        return ((t & WS_VSCROLL) || (t & WS_HSCROLL));
+        return (t & WS_VSCROLL) || (t & WS_HSCROLL);
     }
 };
 //-------------------------------------------------------------------------------------
@@ -76,7 +78,7 @@ private:
     CRect   m_margin;
 
 public:
-    CVerticalWidgetLayout(int item_height, CRect margin = CRect()) : m_item_height(item_height), m_margin(margin) { }
+    CVerticalWidgetLayout(int item_height, CRect margin = CRect()) : m_item_height(item_height), m_margin(margin) {}
 
 private:
     void LayoutWidget(CWnd& wnd, std::deque<CWidgetItemPtr>& child_items) override
