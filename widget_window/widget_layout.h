@@ -93,3 +93,14 @@ private:
         }
     }
 };
+//-------------------------------------------------------------------------------------
+class CSingleWidgetLayout : public CWidgetLayout
+{
+    void LayoutWidget(CWnd& wnd, std::deque<CWidgetItemPtr>& child_items) override
+    {
+        for (auto& iter : child_items)
+        {
+            iter->SetRectOnCanvas(FCWnd::GetClientRect(wnd));
+        }
+    }
+};

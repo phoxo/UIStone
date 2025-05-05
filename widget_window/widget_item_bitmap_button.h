@@ -17,8 +17,7 @@ public:
 protected:
     void OnDrawWidget(CDC& dc) override
     {
-        CSize   sz = phoxo::Utils::GetBitmapSize(m_img);
-        CRect   src(0, 0, sz.cx / 3, sz.cy);
+        CRect   src(CPoint(), GetSliceSize());
         src.OffsetRect(QueryImageIndex() * src.Width(), 0);
         CRect   dest(CPoint(), src.Size());
         ImageHandler::Draw(dc, dest, m_img, src);
@@ -34,12 +33,16 @@ private:
         return 0;
     }
 
-    void SizeToBitmap()
+    CSize GetSliceSize() const
     {
         CSize   sz = phoxo::Utils::GetBitmapSize(m_img);
+        return CSize(sz.cx / 3, sz.cy);
+    }
+
+    void SizeToBitmap()
+    {
         CRect   rc = GetRectOnCanvas();
-        rc.right = rc.left + (sz.cx / 3);
-        rc.bottom = rc.top + sz.cy;
+        rc = CRect(rc.TopLeft(), GetSliceSize());
         SetRectOnCanvas(rc);
     }
 };

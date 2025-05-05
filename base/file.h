@@ -94,16 +94,18 @@ public:
     }
 
     /// Write buffer to file, if file already exist, it will be delete before write.
-    static void Write(PCWSTR filepath, LPCVOID p, DWORD write_bytes)
+    static BOOL Write(PCWSTR filepath, LPCVOID p, DWORD write_bytes)
     {
         SetFileAttributes(filepath, FILE_ATTRIBUTE_NORMAL);
 
+        BOOL   ret = false;
         HANDLE   f = CreateFile(filepath, GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if (DWORD result = 0; f != INVALID_HANDLE_VALUE)
         {
-            ::WriteFile(f, p, write_bytes, &result, NULL); assert(result == write_bytes);
+            ret = ::WriteFile(f, p, write_bytes, &result, NULL);
             CloseHandle(f);
         }
+        return ret;
     }
 
     static CString GetTempFolder()
