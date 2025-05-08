@@ -3,21 +3,6 @@
 class FCString
 {
 public:
-    template<class T>
-    static void SplitTextByToken(const CString& txt, T& output, PCWSTR tokens)
-    {
-        output.clear();
-
-        int   curr = 0;
-        for (;;)
-        {
-            CString   tmp = txt.Tokenize(tokens, curr);
-            if (curr == -1)
-                break;
-            output.push_back(tmp);
-        }
-    }
-
     static std::deque<CString> SplitTextByToken(const CString& txt, PCWSTR tokens)
     {
         std::deque<CString>   vec;

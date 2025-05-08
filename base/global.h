@@ -24,6 +24,7 @@ public:
 #include "gdiplus.h"
 #include "dpi.h"
 #include "file.h"
+#include "regkey.h"
 #include "file_save_agent.h"
 #include "performance_test.h"
 #include "string.h"

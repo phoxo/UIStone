@@ -47,6 +47,7 @@ public:
         }
     }
 
+    // list : https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/a9eac961-e77d-41a6-90a5-ce1a8b0cdb9c
     static CString GetSystemLanguageID()
     {
         WCHAR   buf[LOCALE_NAME_MAX_LENGTH] = {};
@@ -54,18 +55,15 @@ public:
         CharLower(buf);
 
         std::wstring_view   name(buf);
-        if (name.starts_with(L"zh-cn") ||
-            name.starts_with(L"zh-sg") ||
-            (name == L"zh-hans") ||
-            (name == L"zh"))
+        if ((name == L"zh-cn") || (name == L"zh-sg") || (name == L"zh-hans") || (name == L"zh"))
             return L"cn_simp.ini";
 
         if (name.starts_with(L"zh"))  return L"cn_trad.ini";
 
-        if (name.starts_with(L"fr-"))  return L"fr.ini";
-        if (name.starts_with(L"de-"))  return L"de.ini";
-        if (name.starts_with(L"es-"))  return L"es.ini";
-        if (name.starts_with(L"pt-"))  return L"pt.ini";
+        if (name.starts_with(L"fr"))  return L"fr.ini";
+        if (name.starts_with(L"de"))  return L"de.ini";
+        if (name.starts_with(L"es"))  return L"es.ini";
+        if (name.starts_with(L"pt"))  return L"pt.ini";
         if (name.starts_with(L"ru"))  return L"ru.ini";
         if (name.starts_with(L"ar"))  return L"ar.ini";
         if (name.starts_with(L"it"))  return L"it.ini";
@@ -73,6 +71,7 @@ public:
         if (name.starts_with(L"ko"))  return L"ko.ini";
         if (name.starts_with(L"vi"))  return L"vi.ini";
         if (name.starts_with(L"uk"))  return L"uk.ini";
+        if (name.starts_with(L"pl"))  return L"pl.ini";
         return L"en.ini";
     }
 

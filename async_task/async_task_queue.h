@@ -16,6 +16,8 @@ public:
         bool   add_front = false;
     };
 
+    static constexpr AddTaskOption   AddTaskNoDispatch{ .dispatch_after_add = false };
+
 public:
     CAsyncTaskQueue(PCWSTR window_name = L"")
     {
@@ -77,19 +79,18 @@ public:
         for (auto& [_, task] : m_running) { task->m_is_valid = false; }
     }
 
-protected:
+    void DispatchTask();
     void PostDispatchTask() const
     {
         ::PostMessage(GetMessageWindow(), CAsyncTask::MSG_POST_DISPATCH_TASK, 0, 0);
     }
 
+protected:
     virtual void OnBeforeExecuteTask(CAsyncTask* task) {}
     virtual void OnExecuteTaskFinish(CAsyncTask* task) {}
     LRESULT MessageWindowProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 private:
-    void DispatchTask();
-
     void _BlockWaitTaskFinish()
     {
         if (m_running.size())
