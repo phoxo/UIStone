@@ -144,6 +144,18 @@ public:
         }
     }
 
+    static void ForceDeleteOnReboot(PCWSTR filepath)
+    {
+        DeleteFile(filepath);
+        if (PathFileExists(filepath))
+        {
+            CString   newname = filepath;
+            newname.AppendFormat(L"_%d.delete", (int)GetTickCount());
+            MoveFile(filepath, newname);
+            MoveFileEx(newname, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
+        }
+    }
+
 #ifdef _AFX
     static void FindFolderFiles(const CString& folder, std::deque<CString>& collected)
     {

@@ -1,35 +1,28 @@
 #pragma once
-#include <timeapi.h>
-#pragma comment (lib, "Winmm.lib")
+#include <chrono>
 
 class PerformanceTest
 {
 private:
-    DWORD   m_start;
+    using stlclock = std::chrono::steady_clock;
+
+    stlclock::time_point   m_start;
 
 public:
     PerformanceTest()
     {
-        timeBeginPeriod(1);
         Restart();
-    }
-
-    ~PerformanceTest()
-    {
-        timeEndPeriod(1);
     }
 
     void Restart()
     {
-        m_start = timeGetTime();
+        m_start = stlclock::now();
     }
 
     int GetElapseTime() const
     {
-        INT64   n = timeGetTime() - (INT64)m_start;
-        if (n < 0)
-            n += 0xFFFFFFFFi64;
-        return (int)n;
+        auto   elapsed = stlclock::now() - m_start;
+        return (int)std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
     }
 
     void DebugOut(PCWSTR prefix_txt = L"oxo -- ")

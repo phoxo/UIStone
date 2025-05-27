@@ -28,7 +28,6 @@ protected:
         m_tip_ctrl.Create(this, TTS_ALWAYSTIP);
     }
 
-private:
     void OnMouse_EnterWnd() override
     {
         if (m_tip.IsEmpty() || m_tip_ctrl)

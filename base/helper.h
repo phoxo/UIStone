@@ -18,4 +18,11 @@ public:
         }
         return *obj;
     }
+
+    static bool IsExplorerInLightTheme()
+    {
+        DWORD   var = 1, len = sizeof(DWORD); // default: light mode
+        RegGetValue(HKEY_CURRENT_USER, LR"(Software\Microsoft\Windows\CurrentVersion\Themes\Personalize)", L"AppsUseLightTheme", RRF_RT_REG_DWORD, NULL, &var, &len);
+        return var != 0;
+    }
 };

@@ -21,3 +21,25 @@ public:
         ::RestoreDC(m_dc, -1);
     }
 };
+
+#ifdef _AFX
+class BufferedPaintDC : public CDC
+{
+private:
+    HPAINTBUFFER   m_paint;
+
+public:
+    BufferedPaintDC(HDC dc, LPCRECT rc)
+    {
+        HDC   tmpdc = NULL;
+        m_paint = BeginBufferedPaint(dc, rc, BPBF_COMPATIBLEBITMAP, NULL, &tmpdc);
+        Attach(tmpdc);
+    }
+
+    ~BufferedPaintDC()
+    {
+        Detach();
+        EndBufferedPaint(m_paint, TRUE);
+    }
+};
+#endif

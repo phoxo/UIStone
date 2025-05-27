@@ -13,6 +13,11 @@ public:
         m_text_list = FCString::SplitTextByToken(txt, L"|");
     }
 
+    LanguageTextGroup(const CString& txt)
+    {
+        m_text_list = FCString::SplitTextByToken(txt, L"|");
+    }
+
     CString operator[](int index) const
     {
         try
