@@ -38,13 +38,6 @@ public:
         ImageHandler::Draw(dest_dc, CPoint(0, 0), src);
     }
 
-    static HBITMAP CreateDDB(const phoxo::Image& img, HBRUSH fill_background)
-    {
-        GDIBitmap   ddb;
-        ddb.CreateDDBFromDIB(img, fill_background);
-        return ddb.Detach();
-    }
-
     void Delete()
     {
         if (m_bmp) { ::DeleteObject(m_bmp); }
