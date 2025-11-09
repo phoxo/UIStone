@@ -9,7 +9,7 @@ public:
         return index >= 0 && index < (int)vec.size();
     }
 
-    template<class T>
+    template<typename T>
     static T& LazyCreateSingleton(std::unique_ptr<T>& obj)
     {
         if (!obj)

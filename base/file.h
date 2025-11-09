@@ -12,7 +12,6 @@ public:
         CPath   t;
         ::GetModuleFileName(mod, t.m_strPath.GetBuffer(MAX_PATH), MAX_PATH);
         t.m_strPath.ReleaseBuffer();
-        t.Canonicalize();
         return t;
     }
 
@@ -36,7 +35,6 @@ public:
         CPath   dir;
         SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, dir.m_strPath.GetBuffer(MAX_PATH));
         dir.m_strPath.ReleaseBuffer();
-        dir.Canonicalize();
         dir.Append(sub_folder_name);
         dir.AddBackslash();
         return dir;
@@ -120,9 +118,7 @@ public:
     /// ext: such as ".jpg"
     static CString CreateTempFilename(const CString& ext)
     {
-        CString   t = GetTempFolder();
-        t.AppendFormat(L"oxo%u_%d%s", GetTickCount(), rand(), ext);
-        return t;
+        return GetTempFolder() + phoxo::Math::NewGUIDString() + ext;
     }
 
     /// Read a string value from INI.

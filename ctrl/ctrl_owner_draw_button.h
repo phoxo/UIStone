@@ -74,7 +74,7 @@ protected:
         CBitmap   bmp;
         bmp.Attach(CreateCompatibleBitmap(lpDIS->hDC, rc.Width(), rc.Height()));
         {
-            BitmapHDC   auto_bmp_selected(bmp);
+            phoxo::BitmapHDC   auto_bmp_selected(bmp);
             auto   mem_dc = CDC::FromHandle(auto_bmp_selected);
             SelectObject(*mem_dc, FontManager::GetDefaultFont());
             OnDrawButton(*mem_dc, rc);

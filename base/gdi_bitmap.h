@@ -24,18 +24,20 @@ public:
 
     void CreateDDBFromDIB(const phoxo::Image& src, HBRUSH fill_background)
     {
+        using namespace phoxo;
+
         if (src.ColorBits() == 32)
         {
             assert(src.IsPremultiplied());
         }
 
-        CreateDDB(src.GetSize());
+        CreateDDB(src.Size());
         BitmapHDC   dest_dc(m_bmp);
         if (fill_background)
         {
-            ::FillRect(dest_dc, CRect(CPoint(), src.GetSize()), fill_background);
+            ::FillRect(dest_dc, CRect(CPoint(), src.Size()), fill_background);
         }
-        ImageHandler::Draw(dest_dc, CPoint(0, 0), src);
+        ImageDrawer::Draw(dest_dc, CPoint(0, 0), src);
     }
 
     void Delete()
@@ -55,5 +57,12 @@ public:
         HBITMAP   t = m_bmp;
         m_bmp = nullptr;
         return t;
+    }
+
+    static bool IsDDB(HBITMAP bmp)
+    {
+        DIBSECTION   info{};
+        ::GetObject(bmp, sizeof(info), &info);
+        return info.dsBm.bmBits == nullptr;
     }
 };

@@ -2,9 +2,6 @@
 #include <stdexcept>
 #include <ranges>
 
-using phoxo::ImageHandler;
-using phoxo::BitmapHDC;
-
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 
 //-------------------------------------------------------------------------------------

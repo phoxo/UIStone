@@ -18,7 +18,7 @@ public:
 
     SequenceImage(IStream* sp, int image_designed_for_dpi = 2 * USER_DEFAULT_SCREEN_DPI, int count = 0)
     {
-        m_original = WIC::LoadPlainImageFromStream(sp, WICNormal32bpp);
+        m_original = LoadPlainImageFromStream(sp);
         m_count = count;
         m_image_designed_for_dpi = image_designed_for_dpi;
     }
@@ -86,11 +86,20 @@ private:
         auto   t = phoxo::ImageHandler::Make(ScaleRegion(oldrect), output_format);
         if (!output)
         {
-            output.Create(m_dest_each.cx * m_count, m_dest_each.cy * m_row, t.ColorBits(), t.GetAttribute());
+            output.Create(m_dest_each.cx * m_count, m_dest_each.cy * m_row, t.ColorBits(), t.Attribute());
         }
-        ImageHandler::Cover(output, t, newrect.TopLeft());
+        phoxo::ImageHandler::Cover(output, t, newrect.TopLeft());
 
         oldrect.MoveToX(oldrect.right);
         newrect.MoveToX(newrect.right);
+    }
+
+    // NO Metadata, NO embedded ICC and JPEG orientation applied
+    IWICBitmapPtr LoadPlainImageFromStream(IStream* stm)
+    {
+        auto   decoder = WIC::CreateDecoderFromStream(stm);
+        auto   frame = WIC::GetFrame(decoder, 0); // first frame
+        auto   dest = WIC::ConvertFormat(frame, WICNormal32bpp); assert(dest);
+        return WIC::CreateBitmapFromSource(dest);
     }
 };

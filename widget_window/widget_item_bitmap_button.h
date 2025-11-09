@@ -20,7 +20,7 @@ protected:
         CRect   src(CPoint(), GetSliceSize());
         src.OffsetRect(QueryImageIndex() * src.Width(), 0);
         CRect   dest(CPoint(), src.Size());
-        ImageHandler::Draw(dc, dest, m_img, src);
+        phoxo::ImageDrawer::Draw(dc, dest, m_img, src);
     }
 
 private:

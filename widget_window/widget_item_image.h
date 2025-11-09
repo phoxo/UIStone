@@ -18,7 +18,7 @@ protected:
     void OnDrawWidget(CDC& dc) override
     {
         assert(m_img);
-        ImageHandler::Draw(dc, GetItemClientRect(), m_img);
+        phoxo::ImageDrawer::Draw(dc, GetItemClientRect(), m_img);
     }
 
     void SizeToBitmap()

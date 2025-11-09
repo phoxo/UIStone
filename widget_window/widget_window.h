@@ -239,7 +239,7 @@ inline void CWidgetWindow::OnMsgPaint(CDC& paint_dc, CRect update_rect)
     CBitmap   bmp;
     if (bmp.CreateCompatibleBitmap(&paint_dc, update_rect.Width(), update_rect.Height()))
     {
-        BitmapHDC   auto_bmp_selected(bmp); // 析构自动选出
+        phoxo::BitmapHDC   auto_bmp_selected(bmp); // 析构自动选出
         CDC   & mem_dc = *CDC::FromHandle(auto_bmp_selected);
         SelectObject(mem_dc, m_font.m_hObject ? m_font.m_hObject : FontManager::GetDefaultFont());
 
