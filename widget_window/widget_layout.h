@@ -9,7 +9,7 @@ private:
     bool   m_modifying_scrollbar_visible = false;
 
 public:
-    virtual ~CWidgetLayout() {}
+    virtual ~CWidgetLayout() = default;
     virtual void LayoutWidget(CWnd& wnd, std::deque<CWidgetItemPtr>& child_items) = 0;
 
     bool IsModifyingScrollbar() const { return m_modifying_scrollbar_visible; }

@@ -22,7 +22,7 @@ private:
 
 public:
     CWidgetItem(int item_id = 0) : m_id(item_id) {}
-    virtual ~CWidgetItem() {}
+    virtual ~CWidgetItem() = default;
 
     int GetID() const { return m_id; }
     void SetTip(const CString& tip_text) { m_tip = tip_text; }

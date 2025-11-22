@@ -8,7 +8,8 @@ private:
     // Note: 会直接修改 src
     static void CoverState(auto& output, auto& src, auto* effect, int index)
     {
-        src.ApplyEffectAndDelete(effect);
+        src.ApplyEffect(*effect);
+        delete effect;
         phoxo::ImageHandler::Cover(output, src, CPoint(src.Width() * index, 0));
     }
 

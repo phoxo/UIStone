@@ -8,7 +8,7 @@ public:
     int   m_param = 0;
 public:
     ObservedEvent(int event_type) : m_type(event_type) {}
-    virtual ~ObservedEvent() {}
+    virtual ~ObservedEvent() = default;
 };
 //-------------------------------------------------------------------------------------
 // 因为有static inline变量，检查Fire调用时机

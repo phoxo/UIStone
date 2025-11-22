@@ -12,7 +12,8 @@ private:
     int   m_image_designed_for_dpi;
 
 public:
-    SequenceImage(PCWSTR filepath, int image_designed_for_dpi = 2 * USER_DEFAULT_SCREEN_DPI, int count = 0) : SequenceImage(WIC::CreateStreamFromFileNoLock(filepath), image_designed_for_dpi, count)
+    SequenceImage(PCWSTR filepath, int image_designed_for_dpi = 2 * USER_DEFAULT_SCREEN_DPI, int count = 0)
+        : SequenceImage(phoxo::Utils::CreateStreamFromFileNoLock(filepath), image_designed_for_dpi, count)
     {
     }
 

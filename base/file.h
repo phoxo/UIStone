@@ -118,7 +118,7 @@ public:
     /// ext: such as ".jpg"
     static CString CreateTempFilename(const CString& ext)
     {
-        return GetTempFolder() + phoxo::Math::NewGUIDString() + ext;
+        return GetTempFolder() + phoxo::Utils::NewGUIDString() + ext;
     }
 
     /// Read a string value from INI.
